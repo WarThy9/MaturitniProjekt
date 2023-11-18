@@ -8,45 +8,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="obrazky\cancel.png" />
-    <None Remove="obrazky\cancelC.png" />
-    <None Remove="obrazky\cancelH.png" />
-    <None Remove="obrazky\graph.png" />
-    <None Remove="obrazky\graphC.png" />
-    <None Remove="obrazky\graphH.png" />
     <None Remove="obrazky\history.png" />
     <None Remove="obrazky\historyC.png" />
     <None Remove="obrazky\historyH.png" />
     <None Remove="obrazky\home.png" />
     <None Remove="obrazky\homeC.png" />
     <None Remove="obrazky\homeH.png" />
+    <None Remove="obrazky\on.png" />
     <None Remove="obrazky\save.png" />
     <None Remove="obrazky\saveC.png" />
     <None Remove="obrazky\saveH.png" />
     <None Remove="obrazky\shutdown.png" />
     <None Remove="obrazky\shutdownC.png" />
     <None Remove="obrazky\shutdownH.png" />
+    <None Remove="obrazky\start.png" />
+    <None Remove="obrazky\stop.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="obrazky\cancel.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="obrazky\cancelC.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="obrazky\cancelH.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="obrazky\graph.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="obrazky\graphC.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="obrazky\graphH.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="obrazky\history.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -81,6 +60,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="obrazky\shutdownH.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="obrazky\start.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="obrazky\on.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="obrazky\stop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

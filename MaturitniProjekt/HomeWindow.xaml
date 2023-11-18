@@ -8,6 +8,30 @@
       d:DesignHeight="648" d:DesignWidth="1036"
       Title="HomeWindow">
 
+    <Page.Resources>
+        <Style TargetType="Button" x:Key="NoHoverButtonStyle">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource Self}}" />
+                    <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+    
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="465"/>
@@ -23,11 +47,123 @@
                    HorizontalAlignment="Left" 
                    VerticalAlignment="Top"/>
 
-            <Border Height="140px" 
-                    Margin="20,20,0,0"
+            <Border Margin="20,20,0,0"
                     Background="#131725"
                     CornerRadius="10">
 
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <Button Width="118"
+                                Height="50"
+                                Background="#131725"
+                                BorderThickness="2"
+                                BorderBrush="#8A94A6" 
+                                HorizontalAlignment="Left" 
+                                Margin="10,10,0,0"
+                                Padding="-2"
+                                Style="{StaticResource NoHoverButtonStyle}">
+
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" 
+                                            Value="25"/>
+                                </Style>
+                            </Button.Resources>
+
+                            <WrapPanel Width="118">
+                                <Image Source="obrazky/start.png"
+                                       Width="30"
+                                       Height="30" 
+                                       Margin="10,0,0,0" 
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+
+                                <Label Content="Start"
+                                       FontFamily="Bahnschrift Condensed" 
+                                       Foreground="#8A94A6" 
+                                       VerticalContentAlignment="Center" 
+                                       HorizontalContentAlignment="Center" 
+                                       FontSize="30" 
+                                       VerticalAlignment="Center" 
+                                       Height="50" 
+                                       Padding="8.5" 
+                                       Margin="0,0,10,0"/>
+
+                            </WrapPanel>
+                        </Button>
+
+                        <Button Width="118"
+                                Height="50"
+                                Background="#131725"
+                                BorderThickness="2"
+                                BorderBrush="#8A94A6" 
+                                HorizontalAlignment="Left" 
+                                Margin="10,10,0,0"
+                                Padding="-2"
+                                Style="{StaticResource NoHoverButtonStyle}">
+
+                            <Button.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" 
+                                            Value="25"/>
+                                </Style>
+                            </Button.Resources>
+
+                            <WrapPanel Width="118">
+                                <Image Source="obrazky/stop.png"
+                                       Width="30"
+                                       Height="30" 
+                                       Margin="10,0,0,0" 
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+
+                                <Label Content="Stop"
+                                       FontFamily="Bahnschrift Condensed" 
+                                       Foreground="#8A94A6" 
+                                       VerticalContentAlignment="Center" 
+                                       HorizontalContentAlignment="Center" 
+                                       FontSize="30" 
+                                       VerticalAlignment="Center" 
+                                       Height="50" 
+                                       Padding="8.5" 
+                                       Margin="0,0,10,0"/>
+
+                            </WrapPanel>
+                        </Button>
+
+                        <WrapPanel>
+                            <Button Width="30"
+                                    Height="30"
+                                    Background="#131725"
+                                    BorderThickness="2"
+                                    BorderBrush="#8A94A6" 
+                                    HorizontalAlignment="Left" 
+                                    Margin="10,10,0,10"
+                                    Style="{StaticResource NoHoverButtonStyle}">
+
+                                <Button.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" 
+                                                Value="50"/>
+                                    </Style>
+                                </Button.Resources>
+
+                                <Image Source="obrazky/on.png"
+                                           Width="20"
+                                           Height="20"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Top"/>
+                            </Button>
+
+                        </WrapPanel>
+                    </StackPanel>
+
+                </Grid>
 
             </Border>
 

@@ -18,12 +18,18 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <ContentPresenter/>
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource Self}}" />
+                    <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
