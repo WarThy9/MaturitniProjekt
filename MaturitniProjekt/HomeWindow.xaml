@@ -1,0 +1,179 @@
+﻿<Page x:Class="MaturitniProjekt.HomeWindow"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:MaturitniProjekt"
+      mc:Ignorable="d" 
+      d:DesignHeight="648" d:DesignWidth="1036"
+      Title="HomeWindow">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="465"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0">
+
+            <Label Content="Zátěžový test procesoru" 
+                   Foreground="White" 
+                   FontSize="24" 
+                   Margin="20,20,0,0" 
+                   HorizontalAlignment="Left" 
+                   VerticalAlignment="Top"/>
+
+            <Border Height="140px" 
+                    Margin="20,20,0,0"
+                    Background="#131725"
+                    CornerRadius="10">
+
+
+            </Border>
+
+            <Border Margin="20,20,0,20"
+                    Background="#131725"
+                    CornerRadius="10" 
+
+                    Padding="0">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="55"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="27*"/>
+                        <ColumnDefinition Width="62*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="Informace o procesoru"
+                           Foreground="White" 
+                           FontSize="18" 
+                           VerticalAlignment="Center" 
+                           HorizontalAlignment="Left" 
+                           Margin="10,0,0,0"
+                           Grid.ColumnSpan="2" Height="34" Width="190"/>
+
+                    <StackPanel Grid.Column="0" Grid.Row="1">
+
+                        <Label Content="Název:"
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"/>
+
+                        <Label Content="Základní rychlost:"
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"/>
+
+                        <Label Content="Jádra:"
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"/>
+
+                        <Label Content="Logické procesory:"
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"/>
+
+                        <Label Content="Mezipamět L1:"
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"/>
+
+                        <Label Content="Mezipamět L2:"
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"/>
+
+                        <Label Content="Mezipamět L3:"
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,10"/>
+
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Grid.Row="1">
+
+                        <Label Content="Intel(R) Core(TM) i5-6600 CPU @ 3.30GHz"
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"
+                               x:Name="LBLnazev"/>
+
+                        <Label Content="."
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"
+                               x:Name = "LBLrychlost"/>
+
+                        <Label Content="."
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"
+                               x:Name = "LBLjadra"/>
+
+                        <Label Content="."
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"
+                               x:Name = "LBLlprocesory"/>
+
+                        <Label Content="."
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"
+                               x:Name = "LBLmezi1"/>
+
+                        <Label Content="."
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,0"
+                               x:Name = "LBLmezi2"/>
+
+                        <Label Content="."
+                               Foreground="#8A94A6" 
+                               FontSize="14" 
+                               VerticalAlignment="Top" 
+                               HorizontalAlignment="Left" 
+                               Margin="10,0,0,10"
+                               x:Name = "LBLmezi3"/>
+
+                    </StackPanel>
+
+                </Grid>
+
+            </Border>
+
+        </StackPanel>
+    </Grid>
+
+
+</Page>
