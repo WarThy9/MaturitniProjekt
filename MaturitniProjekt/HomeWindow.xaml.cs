@@ -38,7 +38,6 @@ namespace MaturitniProjekt
                 LBLmezi2.Content = cpu.L2CacheSize / 1024 / 1024 + "MB";
                 LBLmezi3.Content = cpu.L3CacheSize / 1024 / 1024 + "MB";
             }
-
         }
 
         #region testHover
@@ -67,6 +66,7 @@ namespace MaturitniProjekt
         {
             TBTNtest.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
             IMGtest.Source = new BitmapImage(new Uri("obrazky/on.png", UriKind.RelativeOrAbsolute));
+            
         }
 
         private void TBTNtest_Unchecked(object sender, RoutedEventArgs e)
