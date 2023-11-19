@@ -15,6 +15,8 @@
     <None Remove="obrazky\homeC.png" />
     <None Remove="obrazky\homeH.png" />
     <None Remove="obrazky\on.png" />
+    <None Remove="obrazky\onC.png" />
+    <None Remove="obrazky\onH.png" />
     <None Remove="obrazky\save.png" />
     <None Remove="obrazky\saveC.png" />
     <None Remove="obrazky\saveH.png" />
@@ -22,7 +24,11 @@
     <None Remove="obrazky\shutdownC.png" />
     <None Remove="obrazky\shutdownH.png" />
     <None Remove="obrazky\start.png" />
+    <None Remove="obrazky\startC.png" />
+    <None Remove="obrazky\startH.png" />
     <None Remove="obrazky\stop.png" />
+    <None Remove="obrazky\stopC.png" />
+    <None Remove="obrazky\stopH.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,6 +48,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="obrazky\homeH.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="obrazky\onC.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="obrazky\onH.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="obrazky\save.png">
@@ -71,9 +83,25 @@
     <Content Include="obrazky\on.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="obrazky\startC.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="obrazky\startH.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="obrazky\stop.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="obrazky\stopC.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="obrazky\stopH.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hardware.Info" Version="100.0.0" />
   </ItemGroup>
 
 </Project>

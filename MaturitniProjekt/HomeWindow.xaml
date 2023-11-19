@@ -29,9 +29,29 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style TargetType="ToggleButton" x:Key="NoHoverToggleButtonStyle">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource Self}}" />
+                    <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Page.Resources>
-    
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="465"/>
@@ -66,7 +86,10 @@
                                 HorizontalAlignment="Left" 
                                 Margin="10,10,0,0"
                                 Padding="-2"
-                                Style="{StaticResource NoHoverButtonStyle}">
+                                Style="{StaticResource NoHoverButtonStyle}"
+                                x:Name="BTNstart" 
+                                MouseEnter="BTNstart_MouseEnter" 
+                                MouseLeave="BTNstart_MouseLeave" Click="BTNstart_Click">
 
                             <Button.Resources>
                                 <Style TargetType="{x:Type Border}">
@@ -81,7 +104,8 @@
                                        Height="30" 
                                        Margin="10,0,0,0" 
                                        HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Center"
+                                       x:Name="IMGstart"/>
 
                                 <Label Content="Start"
                                        FontFamily="Bahnschrift Condensed" 
@@ -92,7 +116,8 @@
                                        VerticalAlignment="Center" 
                                        Height="50" 
                                        Padding="8.5" 
-                                       Margin="0,0,10,0"/>
+                                       Margin="0,0,10,0"
+                                       x:Name="LBLstart"/>
 
                             </WrapPanel>
                         </Button>
@@ -101,11 +126,15 @@
                                 Height="50"
                                 Background="#131725"
                                 BorderThickness="2"
-                                BorderBrush="#8A94A6" 
+                                BorderBrush="#4B5D78" 
                                 HorizontalAlignment="Left" 
                                 Margin="10,10,0,0"
                                 Padding="-2"
-                                Style="{StaticResource NoHoverButtonStyle}">
+                                Style="{StaticResource NoHoverButtonStyle}"
+                                x:Name="BTNstop"
+                                IsEnabled="False" 
+                                MouseEnter="BTNstop_MouseEnter" 
+                                MouseLeave="BTNstop_MouseLeave" Click="BTNstop_Click">
 
                             <Button.Resources>
                                 <Style TargetType="{x:Type Border}">
@@ -115,51 +144,64 @@
                             </Button.Resources>
 
                             <WrapPanel Width="118">
-                                <Image Source="obrazky/stop.png"
+                                <Image Source="obrazky/stoph.png"
                                        Width="30"
                                        Height="30" 
                                        Margin="10,0,0,0" 
                                        HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
+                                       VerticalAlignment="Center"
+                                       x:Name="IMGstop"/>
 
                                 <Label Content="Stop"
                                        FontFamily="Bahnschrift Condensed" 
-                                       Foreground="#8A94A6" 
+                                       Foreground="#4B5D78" 
                                        VerticalContentAlignment="Center" 
                                        HorizontalContentAlignment="Center" 
                                        FontSize="30" 
                                        VerticalAlignment="Center" 
                                        Height="50" 
                                        Padding="8.5" 
-                                       Margin="0,0,10,0"/>
+                                       Margin="0,0,10,0"
+                                       x:Name="LBLstop"/>
 
                             </WrapPanel>
                         </Button>
 
                         <WrapPanel>
-                            <Button Width="30"
-                                    Height="30"
-                                    Background="#131725"
-                                    BorderThickness="2"
-                                    BorderBrush="#8A94A6" 
-                                    HorizontalAlignment="Left" 
-                                    Margin="10,10,0,10"
-                                    Style="{StaticResource NoHoverButtonStyle}">
+                            <ToggleButton Width="30"
+                                          Height="30"
+                                          Background="#131725"
+                                          BorderThickness="2"
+                                          BorderBrush="#3772FF" 
+                                          HorizontalAlignment="Left" 
+                                          Margin="10,10,0,10"
+                                          Style="{StaticResource NoHoverToggleButtonStyle}"
+                                          x:Name="TBTNtest"
+                                          Checked="TBTNtest_Checked" 
+                                          Unchecked="TBTNtest_Unchecked" 
+                                          MouseEnter="TBTNtest_MouseEnter" 
+                                          MouseLeave="TBTNtest_MouseLeave"> 
 
-                                <Button.Resources>
+                                <ToggleButton.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius" 
                                                 Value="50"/>
                                     </Style>
-                                </Button.Resources>
+                                </ToggleButton.Resources>
 
-                                <Image Source="obrazky/on.png"
-                                           Width="20"
-                                           Height="20"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Top"/>
-                            </Button>
+                                <Image Source="obrazky/onC.png"
+                                       Width="20"
+                                       Height="20"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Top"
+                                       x:Name="IMGtest"/>
+                            </ToggleButton>
 
+                            <TextBlock Text="Automatický test" 
+                                       Width="71" 
+                                       TextWrapping="WrapWithOverflow" 
+                                       Foreground="#8A94A6"
+                                       FontFamily="Bahnschrift Condensed" FontSize="16" Height="34" Margin="10,0,0,2" />
                         </WrapPanel>
                     </StackPanel>
 
@@ -246,7 +288,7 @@
 
                     <StackPanel Grid.Column="1" Grid.Row="1">
 
-                        <Label Content="Intel(R) Core(TM) i5-6600 CPU @ 3.30GHz"
+                        <Label Content=""
                                Foreground="#8A94A6" 
                                FontSize="14" 
                                VerticalAlignment="Top" 
@@ -254,7 +296,7 @@
                                Margin="10,0,0,0"
                                x:Name="LBLnazev"/>
 
-                        <Label Content="."
+                        <Label Content=""
                                Foreground="#8A94A6" 
                                FontSize="14" 
                                VerticalAlignment="Top" 
@@ -262,7 +304,7 @@
                                Margin="10,0,0,0"
                                x:Name = "LBLrychlost"/>
 
-                        <Label Content="."
+                        <Label Content=""
                                Foreground="#8A94A6" 
                                FontSize="14" 
                                VerticalAlignment="Top" 
@@ -270,7 +312,7 @@
                                Margin="10,0,0,0"
                                x:Name = "LBLjadra"/>
 
-                        <Label Content="."
+                        <Label Content=""
                                Foreground="#8A94A6" 
                                FontSize="14" 
                                VerticalAlignment="Top" 
@@ -278,7 +320,7 @@
                                Margin="10,0,0,0"
                                x:Name = "LBLlprocesory"/>
 
-                        <Label Content="."
+                        <Label Content=""
                                Foreground="#8A94A6" 
                                FontSize="14" 
                                VerticalAlignment="Top" 
@@ -286,7 +328,7 @@
                                Margin="10,0,0,0"
                                x:Name = "LBLmezi1"/>
 
-                        <Label Content="."
+                        <Label Content=""
                                Foreground="#8A94A6" 
                                FontSize="14" 
                                VerticalAlignment="Top" 
@@ -294,7 +336,7 @@
                                Margin="10,0,0,0"
                                x:Name = "LBLmezi2"/>
 
-                        <Label Content="."
+                        <Label Content=""
                                Foreground="#8A94A6" 
                                FontSize="14" 
                                VerticalAlignment="Top" 
