@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hardware.Info;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -21,8 +22,10 @@ namespace MaturitniProjekt
     /// </summary>
     public partial class MainWindow : Window
     {
+        static readonly IHardwareInfo hardwareInfo = new HardwareInfo();
         public MainWindow()
         {
+            hardwareInfo.RefreshCPUList();
             InitializeComponent();
 
             hlavniFrame.Content = new HomeWindow();

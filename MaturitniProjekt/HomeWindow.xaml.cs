@@ -1,6 +1,7 @@
 ﻿using Hardware.Info;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -14,6 +15,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MaturitniProjekt
 {
@@ -23,11 +26,19 @@ namespace MaturitniProjekt
     public partial class HomeWindow : Page
     {
         static readonly IHardwareInfo hardwareInfo = new HardwareInfo();
+        Stopwatch stopky = new Stopwatch();
+        private bool automatickyTest = true;
+        private bool behTestu = true;
         public HomeWindow()
         {
             InitializeComponent();
+           
+            if (trida.neco == 0)
+            {
+                trida.neco = 1;
+                hardwareInfo.RefreshCPUList();
+            }
 
-            hardwareInfo.RefreshCPUList();
             foreach (var cpu in hardwareInfo.CpuList)
             {
                 LBLnazev.Content = cpu.Name;
@@ -38,6 +49,7 @@ namespace MaturitniProjekt
                 LBLmezi2.Content = cpu.L2CacheSize / 1024 / 1024 + "MB";
                 LBLmezi3.Content = cpu.L3CacheSize / 1024 / 1024 + "MB";
             }
+           
         }
 
         #region testHover
@@ -120,7 +132,7 @@ namespace MaturitniProjekt
         }
         #endregion stopHover
 
-        private async void BTNstart_Click(object sender, RoutedEventArgs e)
+        private  void BTNstart_Click(object sender, RoutedEventArgs e)
         {
             BTNstart.IsEnabled = false;
             TBTNtest.IsEnabled = false;
@@ -128,17 +140,27 @@ namespace MaturitniProjekt
             IMGstart.Source = new BitmapImage(new Uri("obrazky/startC.png", UriKind.RelativeOrAbsolute));
             LBLstart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3772FF"));
 
+            LBLskore.Visibility = Visibility.Hidden;
+            LBLskore.Content = 0;
+            trida.skore = 0;
+            stopky.Reset();
+            stopky.Start();
+
             if (TBTNtest.IsChecked == false)
             {
-                await Task.Delay(5000);
-                BTNstart.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
-                IMGstart.Source = new BitmapImage(new Uri("obrazky/start.png", UriKind.RelativeOrAbsolute));
-                LBLstart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
-                BTNstart.IsEnabled = true;
-                TBTNtest.IsEnabled = true;
+                LBLcas.Visibility = Visibility.Hidden;
+                BRDpb.Visibility = Visibility.Visible;
+                automatickyTest = true;
+                BTNstart.Dispatcher.InvokeAsync(zatezovyTest, DispatcherPriority.SystemIdle);       
             }
             else if (TBTNtest.IsChecked == true)
             {
+                behTestu = true;
+                LBLcas.Visibility = Visibility.Visible;
+                BRDpb.Visibility = Visibility.Hidden;
+                automatickyTest = false;
+                BTNstart.Dispatcher.InvokeAsync(zatezovyTest, DispatcherPriority.SystemIdle);
+
                 BTNstop.IsEnabled = true;
                 BTNstop.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
                 IMGstop.Source = new BitmapImage(new Uri("obrazky/stop.png", UriKind.RelativeOrAbsolute));
@@ -158,6 +180,7 @@ namespace MaturitniProjekt
             IMGstart.Source = new BitmapImage(new Uri("obrazky/startH.png", UriKind.RelativeOrAbsolute));
             LBLstart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B5D78"));
 
+            behTestu = false;
             await Task.Delay(1000);
             
             BTNstop.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B5D78"));
@@ -172,5 +195,47 @@ namespace MaturitniProjekt
             TBTNtest.IsEnabled = true;
            
         }
+
+        public void zatezovyTest()
+        {
+            trida.skore++;
+
+            if (automatickyTest == true)
+            {
+                PBcas.Value = stopky.Elapsed.TotalSeconds;
+                if (stopky.Elapsed.TotalSeconds < 60)
+                {
+                    BTNstart.Dispatcher.InvokeAsync(zatezovyTest, DispatcherPriority.SystemIdle);
+                }
+                else
+                {
+                    stopky.Stop();
+                    LBLskore.Visibility = Visibility.Visible;
+                    LBLskore.Content = $"Skore: {trida.skore / (int)stopky.Elapsed.TotalSeconds}";
+
+                    BTNstart.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
+                    IMGstart.Source = new BitmapImage(new Uri("obrazky/start.png", UriKind.RelativeOrAbsolute));
+                    LBLstart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
+                    BTNstart.IsEnabled = true;
+                    TBTNtest.IsEnabled = true;
+                }
+            }
+            else
+            {
+                if (behTestu == true)
+                {
+                    LBLcas.Content = $"Čas: {(int)stopky.Elapsed.TotalSeconds}s";
+                    BTNstart.Dispatcher.InvokeAsync(zatezovyTest, DispatcherPriority.SystemIdle);
+                }
+                else
+                {
+                    stopky.Stop();
+                    LBLskore.Visibility = Visibility.Visible;
+                    LBLskore.Content = $"Skore: {trida.skore / (int)stopky.Elapsed.TotalSeconds}";
+                }
+            }
+           
+        }
+
     }
 }

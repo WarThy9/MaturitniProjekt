@@ -73,8 +73,8 @@
 
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="36*"/>
+                        <ColumnDefinition Width="53*"/>
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0">
@@ -180,7 +180,7 @@
                                           Checked="TBTNtest_Checked" 
                                           Unchecked="TBTNtest_Unchecked" 
                                           MouseEnter="TBTNtest_MouseEnter" 
-                                          MouseLeave="TBTNtest_MouseLeave"> 
+                                          MouseLeave="TBTNtest_MouseLeave">
 
                                 <ToggleButton.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -203,8 +203,43 @@
                                        Foreground="#8A94A6"
                                        FontFamily="Bahnschrift Condensed" FontSize="16" Height="34" Margin="10,0,0,2" />
                         </WrapPanel>
-                    </StackPanel>
 
+                    </StackPanel>
+                    <Border BorderBrush="#8A94A6"
+                            BorderThickness="2"
+                            Grid.Column="1"
+                            Margin="0,10,10,0" 
+                            Height="50" 
+                            VerticalAlignment="Top"
+                            Visibility="Hidden"
+                            x:Name="BRDpb">
+                        <ProgressBar BorderThickness="0"
+                                     VerticalAlignment="Top"
+                                     Background="Transparent"
+                                     Height="46" 
+                                     Maximum="60"
+                                     x:Name="PBcas"/>
+                    </Border>
+
+                    <Label Grid.Column="1"
+                           Margin="0,10,10,0" 
+                           Height="50" 
+                           VerticalAlignment="Top"
+                           Content="" 
+                           FontSize="28"
+                           Foreground="#8A94A6"
+                           Visibility="Hidden"
+                           x:Name="LBLcas"/>
+
+                    <Label Grid.Column="1"
+                           Margin="0,70,10,0" 
+                           Height="50" 
+                           VerticalAlignment="Top"
+                           Content="" 
+                           FontSize="28"
+                           Foreground="#8A94A6"
+                           Visibility="Hidden"
+                           x:Name="LBLskore"/>
                 </Grid>
 
             </Border>
@@ -213,7 +248,7 @@
                     Background="#131725"
                     CornerRadius="10" 
 
-                    Padding="0">
+                    Padding="0,0,5,0">
 
                 <Grid>
                     <Grid.RowDefinitions>
