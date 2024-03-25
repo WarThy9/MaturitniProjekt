@@ -9,7 +9,7 @@ namespace MaturitniProjekt
 {
     public static class trida
     {
-        public static int neco { get; set; } = 0;
+        public static int prvotniNacteni { get; set; } = 0;
         public static long skore { get; set; }
 
     }
