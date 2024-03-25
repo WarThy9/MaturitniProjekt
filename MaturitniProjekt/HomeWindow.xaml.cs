@@ -25,9 +25,7 @@ namespace MaturitniProjekt
     /// </summary>
     public partial class HomeWindow : Page
     {
-        static readonly IHardwareInfo hardwareInfo = new HardwareInfo();
-        Stopwatch stopky = new Stopwatch();
-        private bool automatickyTest = true;
+        static IHardwareInfo hardwareInfo = new HardwareInfo();
         private bool behTestu = true;
         public HomeWindow()
         {
@@ -38,6 +36,7 @@ namespace MaturitniProjekt
                 trida.neco = 1;
                 hardwareInfo.RefreshCPUList();
             }
+
 
             foreach (var cpu in hardwareInfo.CpuList)
             {
@@ -143,23 +142,22 @@ namespace MaturitniProjekt
             LBLskore.Visibility = Visibility.Hidden;
             LBLskore.Content = 0;
             trida.skore = 0;
-            stopky.Reset();
-            stopky.Start();
 
-            if (TBTNtest.IsChecked == false)
+            if (TBTNtest.IsChecked == false) //auto
             {
                 LBLcas.Visibility = Visibility.Hidden;
                 BRDpb.Visibility = Visibility.Visible;
-                automatickyTest = true;
-                BTNstart.Dispatcher.InvokeAsync(zatezovyTest, DispatcherPriority.SystemIdle);       
+                Thread test = new Thread(() => zatezovyTest(true));
+                test.Start();
             }
-            else if (TBTNtest.IsChecked == true)
+            else if (TBTNtest.IsChecked == true) //noAuto
             {
                 behTestu = true;
                 LBLcas.Visibility = Visibility.Visible;
                 BRDpb.Visibility = Visibility.Hidden;
-                automatickyTest = false;
-                BTNstart.Dispatcher.InvokeAsync(zatezovyTest, DispatcherPriority.SystemIdle);
+
+                Thread test = new Thread(() => zatezovyTest(false));
+                test.Start();
 
                 BTNstop.IsEnabled = true;
                 BTNstop.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
@@ -196,45 +194,72 @@ namespace MaturitniProjekt
            
         }
 
-        public void zatezovyTest()
+        public void zatezovyTest(bool automatickyTest)
         {
-            trida.skore++;
+            Stopwatch stopky = new Stopwatch();
 
-            if (automatickyTest == true)
+            if (automatickyTest == true) //auto
             {
-                PBcas.Value = stopky.Elapsed.TotalSeconds;
-                if (stopky.Elapsed.TotalSeconds < 60)
+                stopky.Start();
+                while(stopky.Elapsed.TotalSeconds < 61)
                 {
-                    BTNstart.Dispatcher.InvokeAsync(zatezovyTest, DispatcherPriority.SystemIdle);
+                    trida.skore++;
+                    update((int)stopky.Elapsed.TotalSeconds, automatickyTest);
                 }
-                else
-                {
-                    stopky.Stop();
-                    LBLskore.Visibility = Visibility.Visible;
-                    LBLskore.Content = $"Skore: {trida.skore / (int)stopky.Elapsed.TotalSeconds}";
+                stopky.Stop();
 
-                    BTNstart.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
-                    IMGstart.Source = new BitmapImage(new Uri("obrazky/start.png", UriKind.RelativeOrAbsolute));
-                    LBLstart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
-                    BTNstart.IsEnabled = true;
-                    TBTNtest.IsEnabled = true;
+            }
+            else //noAuto
+            {
+                stopky.Start();
+                while (behTestu)
+                {
+                    trida.skore++;
+                    update((int)stopky.Elapsed.TotalSeconds, automatickyTest);
+                }
+                update((int)stopky.Elapsed.TotalSeconds, automatickyTest);
+                stopky.Stop();
+            }
+        }
+
+        public void update(int cas, bool automatickyTest)
+        {
+            if (automatickyTest == true) //auto
+            {
+                Dispatcher.Invoke(() => { PBcas.Value = cas; });
+                if (cas == 60)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        LBLskore.Visibility = Visibility.Visible;
+                        LBLskore.Content = $"Skore: {trida.skore / cas}";
+
+                        BTNstart.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
+                        IMGstart.Source = new BitmapImage(new Uri("obrazky/start.png", UriKind.RelativeOrAbsolute));
+                        LBLstart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
+                        BTNstart.IsEnabled = true;
+                        TBTNtest.IsEnabled = true;
+                    });
                 }
             }
-            else
+            else //noAuto
             {
                 if (behTestu == true)
                 {
-                    LBLcas.Content = $"Čas: {(int)stopky.Elapsed.TotalSeconds}s";
-                    BTNstart.Dispatcher.InvokeAsync(zatezovyTest, DispatcherPriority.SystemIdle);
+                    Dispatcher.Invoke(() => { LBLcas.Content = $"Čas: {cas}s"; });
                 }
                 else
                 {
-                    stopky.Stop();
-                    LBLskore.Visibility = Visibility.Visible;
-                    LBLskore.Content = $"Skore: {trida.skore / (int)stopky.Elapsed.TotalSeconds}";
+                    Dispatcher.Invoke(() =>
+                    {
+                        LBLskore.Visibility = Visibility.Visible;
+                        LBLskore.Content = $"Skore: {trida.skore / cas}";
+                    });
                 }
             }
-           
+
+
+
         }
 
     }
