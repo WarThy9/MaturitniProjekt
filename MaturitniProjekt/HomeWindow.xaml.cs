@@ -32,8 +32,10 @@ namespace MaturitniProjekt
 
         public HomeWindow()
         {
+            trida.globalniBeh = true;
+
             InitializeComponent();
-           
+
             if (trida.prvotniNacteni == 0)
             {
                 trida.prvotniNacteni = 1;
@@ -218,7 +220,7 @@ namespace MaturitniProjekt
             stopky.Start();
             if (automatickyTest == true)
             {
-                while (stopky.Elapsed.TotalSeconds < 61)
+                while (stopky.Elapsed.TotalSeconds < 61 && trida.globalniBeh == true)
                 {
                     Task[] tasky = new Task[Environment.ProcessorCount];
                     for (int i = 0; i < tasky.Length; i++)
@@ -232,7 +234,7 @@ namespace MaturitniProjekt
             }
             else
             {
-                while (behTestu == true)
+                while (behTestu == true && trida.globalniBeh == true)
                 {
                     Task[] tasky = new Task[Environment.ProcessorCount];
                     for (int i = 0; i < tasky.Length; i++)
@@ -249,12 +251,12 @@ namespace MaturitniProjekt
         private void zatezovaOperace(int indexJadra, bool automatickyTest)
         {
             // Simulate intensive computation
-            double result = 0;
+            float vysledek = 0;
             for (int i = 0; i < int.MaxValue; i++)
             {
-                if (automatickyTest == true)
+                if (automatickyTest == true )
                 {
-                    if (stopky.Elapsed.TotalSeconds >= 60)
+                    if (stopky.Elapsed.TotalSeconds >= 60 || trida.globalniBeh == false)
                     {
                         stopky.Stop();
                         return;
@@ -262,14 +264,14 @@ namespace MaturitniProjekt
                 }      
                 else
                 {
-                    if (behTestu == false)
+                    if (behTestu == false || trida.globalniBeh == false)
                     {
                         stopky.Stop();
                         return; 
                     }
                 }
                 
-                result += Math.Sqrt(i + indexJadra);
+                vysledek += Math.Sqrt(i + indexJadra);
                 trida.skore++;
             }
         }

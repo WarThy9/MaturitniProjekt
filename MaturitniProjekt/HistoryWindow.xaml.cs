@@ -22,7 +22,10 @@ namespace MaturitniProjekt
     {
         public HistoryWindow()
         {
+            trida.globalniBeh = false;
+
             InitializeComponent();
+
         }
     }
 }

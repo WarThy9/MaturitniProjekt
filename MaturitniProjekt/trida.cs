@@ -11,6 +11,7 @@ namespace MaturitniProjekt
     {
         public static int prvotniNacteni { get; set; } = 0;
         public static long skore { get; set; }
+        public static bool globalniBeh { get; set; } = true;
 
     }
 }
