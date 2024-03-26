@@ -1,5 +1,7 @@
 ﻿using Hardware.Info;
+using LibreHardwareMonitor.Hardware;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -25,10 +27,15 @@ namespace MaturitniProjekt
     /// </summary>
     public partial class HomeWindow : Page
     {
+        Dictionary<string, List<int>> zatezJader = new Dictionary<string, List<int>>();
         static IHardwareInfo hardwareInfo = new HardwareInfo();
         private bool behTestu = false;
         private bool behTestuAuto = true;
         Stopwatch stopky = new Stopwatch();
+        Computer computer = new Computer
+        {
+            IsCpuEnabled = true
+        };
 
         public HomeWindow()
         {
@@ -41,8 +48,7 @@ namespace MaturitniProjekt
                 trida.prvotniNacteni = 1;
                 hardwareInfo.RefreshCPUList();
             }
-
-
+  
             foreach (var cpu in hardwareInfo.CpuList)
             {
                 LBLnazev.Content = cpu.Name;
@@ -154,7 +160,7 @@ namespace MaturitniProjekt
                 LBLcas.Visibility = Visibility.Hidden;
                 BRDpb.Visibility = Visibility.Visible;
 
-                BTNstart.Dispatcher.InvokeAsync(update, DispatcherPriority.SystemIdle);
+                Dispatcher.InvokeAsync(update, DispatcherPriority.SystemIdle);
                 await zatezovyTest(true);
 
                 LBLskore.Visibility = Visibility.Visible;
@@ -178,7 +184,7 @@ namespace MaturitniProjekt
                 IMGstop.Source = new BitmapImage(new Uri("obrazky/stop.png", UriKind.RelativeOrAbsolute));
                 LBLstop.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
 
-                BTNstart.Dispatcher.InvokeAsync(update, DispatcherPriority.SystemIdle);
+                Dispatcher.InvokeAsync(update, DispatcherPriority.SystemIdle);
                 await zatezovyTest(false);
 
                 LBLskore.Visibility = Visibility.Visible;
@@ -213,7 +219,7 @@ namespace MaturitniProjekt
             TBTNtest.IsEnabled = true;
            
         }
-
+        #region zatezovyTest
         public async Task zatezovyTest(bool automatickyTest)
         {
             stopky.Reset();
@@ -271,11 +277,10 @@ namespace MaturitniProjekt
                     }
                 }
                 
-                vysledek += Math.Sqrt(i + indexJadra);
+                vysledek += (float)Math.Sqrt(i + indexJadra);
                 trida.skore++;
             }
         }
-
         private async void update()
         {
              if (behTestuAuto == true)
@@ -290,7 +295,49 @@ namespace MaturitniProjekt
             {
                 return;
             }
-            BTNstart.Dispatcher.InvokeAsync(update, DispatcherPriority.SystemIdle);
+            Dispatcher.InvokeAsync(update, DispatcherPriority.SystemIdle);
+        }
+
+        #endregion zatezovyTest
+        private void ziskavaniZateze()
+        {
+
+            computer.Open();
+            foreach (var hardwareItem in computer.Hardware)
+            {
+                if (hardwareItem.HardwareType == HardwareType.Cpu)
+                {
+                    hardwareItem.Update();
+
+                    foreach (var sensor in hardwareItem.Sensors)
+                    {
+                        if (sensor.SensorType == SensorType.Load)
+                        {
+                            float? neco = sensor.Value;
+                            int formatovanaZatez = (int)sensor.Value;
+
+                            if (sensor.Name.Contains("Total"))
+                            {
+                                if (!zatezJader.ContainsKey("total"))
+                                {
+                                    zatezJader["total"] = new List<int>();
+                                }
+                                zatezJader["total"].Add(formatovanaZatez);
+                            }
+                            else if (sensor.Name.Contains("#"))
+                            {
+                                string formatovaneJmeno = sensor.Name.Substring(sensor.Name.IndexOf("#") + 1);
+                                if (!zatezJader.ContainsKey(formatovaneJmeno))
+                                {
+                                    zatezJader[formatovaneJmeno] = new List<int>();
+                                }
+
+                                zatezJader[formatovaneJmeno].Add(formatovanaZatez);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

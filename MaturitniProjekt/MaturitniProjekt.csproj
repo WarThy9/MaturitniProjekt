@@ -102,6 +102,7 @@
 
   <ItemGroup>
     <PackageReference Include="Hardware.Info" Version="100.1.0" />
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.3" />
   </ItemGroup>
 
 </Project>
