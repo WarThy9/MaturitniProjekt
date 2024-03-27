@@ -6,7 +6,8 @@
       xmlns:local="clr-namespace:MaturitniProjekt"
       mc:Ignorable="d" 
       d:DesignHeight="648" d:DesignWidth="1036"
-      Title="HomeWindow">
+      Title="HomeWindow"
+      xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF">
 
     <Page.Resources>
         <Style TargetType="Button" x:Key="NoHoverButtonStyle">
@@ -388,14 +389,22 @@
 
         </StackPanel>
 
+        
+        
         <StackPanel Grid.Column="1">
             
             <Border Width="auto" Height="150"
                     Margin="20,20,20,0"
                     CornerRadius="10"
                     Background="#131725">
-                
-  
+                <lvc:CartesianChart
+                    Series="{Binding Series}"
+                    XAxes="{Binding XAxes}"
+                    YAxes="{Binding YAxes}"
+                    Height="150"
+                    Width="531">
+                </lvc:CartesianChart>
+
             </Border>
 
             <ScrollViewer Margin="20,10,1,0" 
@@ -419,105 +428,15 @@
 
                     </WrapPanel>
 
-                    <WrapPanel Margin="0,0,0,10">
-
-                        <Border Height="100px"
-            Width="260.5"
-            Background="#131725"
-            CornerRadius="10">
-                        </Border>
-
-                        <Border Height="100px"
-            Width="260.5"
-            Background="#131725"
-            CornerRadius="10" Margin="10,0,0,0">
-                        </Border>
-
-                    </WrapPanel>
-
-                    <WrapPanel Margin="0,0,0,10">
-
-                        <Border Height="100px"
-            Width="260.5"
-            Background="#131725"
-            CornerRadius="10">
-                        </Border>
-
-                        <Border Height="100px"
-            Width="260.5"
-            Background="#131725"
-            CornerRadius="10" Margin="10,0,0,0">
-                        </Border>
-
-                    </WrapPanel>
-
-                    <WrapPanel Margin="0,0,0,10">
-
-                        <Border Height="100px"
-            Width="260.5"
-            Background="#131725"
-            CornerRadius="10">
-                        </Border>
-
-                        <Border Height="100px"
-            Width="260.5"
-            Background="#131725"
-            CornerRadius="10" Margin="10,0,0,0">
-                        </Border>
-
-                    </WrapPanel>
-
-                    <WrapPanel Margin="0,0,0,10">
-
-                        <Border Height="100px"
-            Width="260.5"
-            Background="#131725"
-            CornerRadius="10">
-                        </Border>
-
-                        <Border Height="100px"
-            Width="260.5"
-            Background="#131725"
-            CornerRadius="10" Margin="10,0,0,0">
-                        </Border>
-
-                    </WrapPanel>
-
-                    <WrapPanel Margin="0,0,0,10">
-
-                        <Border Height="100px"
-            Width="260.5"
-            Background="#131725"
-            CornerRadius="10">
-                        </Border>
-
-                        <Border Height="100px"
-            Width="260.5"
-            Background="#131725"
-            CornerRadius="10" Margin="10,0,0,0">
-                        </Border>
-
-                    </WrapPanel>
-
-
                 </StackPanel>
                 
-
-                
-
-
             </ScrollViewer>
-            
-            
-            
-            
-            
- 
+
         </StackPanel>
- 
-        
-        
+    
     </Grid>
 
-
+    <Page.DataContext>
+        <local:ViewModel/>
+    </Page.DataContext>
 </Page>
