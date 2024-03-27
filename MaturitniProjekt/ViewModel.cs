@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Windows.Ink;
+using System.Windows;
 
 namespace MaturitniProjekt
 {
@@ -30,7 +31,7 @@ namespace MaturitniProjekt
            {
             new Axis
             {
-                
+               
                 MinLimit = 0,
                 MaxLimit = 60,
             
