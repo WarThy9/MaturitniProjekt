@@ -1,5 +1,8 @@
 ﻿using Hardware.Info;
 using LibreHardwareMonitor.Hardware;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.WPF;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,7 +30,7 @@ namespace MaturitniProjekt
     /// </summary>
     public partial class HomeWindow : Page
     {
-        Dictionary<string, List<int>> zatezJader = new Dictionary<string, List<int>>();
+        
         static IHardwareInfo hardwareInfo = new HardwareInfo();
         private bool behTestu = false;
         private bool behTestuAuto = true;
@@ -37,18 +40,22 @@ namespace MaturitniProjekt
             IsCpuEnabled = true
         };
 
+
         public HomeWindow()
         {
             trida.globalniBeh = true;
 
             InitializeComponent();
 
+            Thread test = new Thread(ziskavaniZateze);
+            test.Start();
+
             if (trida.prvotniNacteni == 0)
             {
                 trida.prvotniNacteni = 1;
                 hardwareInfo.RefreshCPUList();
             }
-  
+            int pocetProcesoru = 0;
             foreach (var cpu in hardwareInfo.CpuList)
             {
                 LBLnazev.Content = cpu.Name;
@@ -58,8 +65,11 @@ namespace MaturitniProjekt
                 LBLmezi1.Content = (cpu.L1DataCacheSize + cpu.L1InstructionCacheSize) / 1024 + "kB";
                 LBLmezi2.Content = cpu.L2CacheSize / 1024 / 1024 + "MB";
                 LBLmezi3.Content = cpu.L3CacheSize / 1024 / 1024 + "MB";
+                pocetProcesoru = (int)cpu.NumberOfLogicalProcessors;
             }
-           
+
+            vytvoreniGrafu(pocetProcesoru);
+
         }
 
         #region testHover
@@ -299,45 +309,113 @@ namespace MaturitniProjekt
         }
 
         #endregion zatezovyTest
-        private void ziskavaniZateze()
+        private async void ziskavaniZateze()
         {
-
             computer.Open();
-            foreach (var hardwareItem in computer.Hardware)
+            while (true) 
             {
-                if (hardwareItem.HardwareType == HardwareType.Cpu)
+                await Task.Delay(1000);
+                foreach (var hardwareItem in computer.Hardware)
                 {
-                    hardwareItem.Update();
-
-                    foreach (var sensor in hardwareItem.Sensors)
+                    if (hardwareItem.HardwareType == HardwareType.Cpu)
                     {
-                        if (sensor.SensorType == SensorType.Load)
+                        hardwareItem.Update();
+
+                        foreach (var sensor in hardwareItem.Sensors)
                         {
-                            float? neco = sensor.Value;
-                            int formatovanaZatez = (int)sensor.Value;
-
-                            if (sensor.Name.Contains("Total"))
+                            if (sensor.SensorType == SensorType.Load)
                             {
-                                if (!zatezJader.ContainsKey("total"))
-                                {
-                                    zatezJader["total"] = new List<int>();
-                                }
-                                zatezJader["total"].Add(formatovanaZatez);
-                            }
-                            else if (sensor.Name.Contains("#"))
-                            {
-                                string formatovaneJmeno = sensor.Name.Substring(sensor.Name.IndexOf("#") + 1);
-                                if (!zatezJader.ContainsKey(formatovaneJmeno))
-                                {
-                                    zatezJader[formatovaneJmeno] = new List<int>();
-                                }
+                                float? neco = sensor.Value;
+                                int formatovanaZatez = (int)sensor.Value;
 
-                                zatezJader[formatovaneJmeno].Add(formatovanaZatez);
+                                if (sensor.Name.Contains("Total"))
+                                {
+                                    if (!trida.zatezJader.ContainsKey("total"))
+                                    {
+                                        trida.zatezJader["total"] = new List<int>();
+                                    }
+                                    kontrolaPoctuZaznamu("total");
+                                    trida.zatezJader["total"].Add(formatovanaZatez);
+                                }
+                                else if (sensor.Name.Contains("#"))
+                                {
+                                    string formatovaneJmeno = sensor.Name.Substring(sensor.Name.IndexOf("#") + 1);
+                                    if (!trida.zatezJader.ContainsKey(formatovaneJmeno))
+                                    {
+                                        trida.zatezJader[formatovaneJmeno] = new List<int>();
+                                    }
+                                    kontrolaPoctuZaznamu(formatovaneJmeno);
+                                    trida.zatezJader[formatovaneJmeno].Add(formatovanaZatez);
+                                }
                             }
                         }
                     }
+
                 }
+            
             }
+        }
+
+        private void kontrolaPoctuZaznamu(string nazevIndexu)
+        {
+            int pocetIndexu = trida.zatezJader[nazevIndexu].Count;
+            if (pocetIndexu == 60)
+            {
+                trida.zatezJader[nazevIndexu].RemoveAt(0);
+            }
+        }
+
+        private void vytvoreniGrafu(int pocetJader)
+        {
+            for (int i = 0; i < pocetJader; i++)
+            {
+                WrapPanel wrapPanel = new WrapPanel
+                {
+                    Margin = new Thickness(0, 0, 0, 10)
+                };
+
+                
+                Border border1 = new Border
+                {
+                    Height = 100,
+                    Width = 260.5,
+                    Background = new SolidColorBrush(Color.FromRgb(19, 23, 37)),
+                    CornerRadius = new CornerRadius(10),
+                    Padding = new Thickness(5)
+                };
+
+                CartesianChart chart1 = new CartesianChart();
+                chart1.SetBinding(CartesianChart.SeriesProperty, new Binding("Series" + i));
+                chart1.SetBinding(CartesianChart.XAxesProperty, new Binding("XAxes"));
+                chart1.SetBinding(CartesianChart.YAxesProperty, new Binding("YAxes"));
+
+                border1.Child = chart1;
+
+                Border border2 = new Border
+                {
+                    Height = 100,
+                    Width = 260.5,
+                    Background = new SolidColorBrush(Color.FromRgb(19, 23, 37)),
+                    CornerRadius = new CornerRadius(10),
+                    Margin = new Thickness(10, 0, 0, 0),
+                    Padding = new Thickness(5)
+                };
+
+                i++;
+
+                CartesianChart chart2 = new CartesianChart();
+                chart2.SetBinding(CartesianChart.SeriesProperty, new Binding("Series" + i));
+                chart2.SetBinding(CartesianChart.XAxesProperty, new Binding("XAxes"));
+                chart2.SetBinding(CartesianChart.YAxesProperty, new Binding("YAxes"));
+
+                border2.Child = chart2;
+
+                wrapPanel.Children.Add(border1);
+                wrapPanel.Children.Add(border2);
+
+                grafy.Children.Add(wrapPanel);
+            }
+            
         }
     }
 }

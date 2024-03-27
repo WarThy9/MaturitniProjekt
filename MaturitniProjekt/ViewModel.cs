@@ -9,21 +9,23 @@ using LiveChartsCore.SkiaSharpView.Painting;
 using SkiaSharp;
 using System.Windows.Ink;
 using System.Windows;
+using LibreHardwareMonitor.Hardware.Storage;
 
 namespace MaturitniProjekt
 {
     public class ViewModel
     {
+
+
         public ISeries[] Series { get; set; }
             = new ISeries[]
             {
                 new LineSeries<double>
                 {
-                    Values = new double[] { 2, 1, 3, 5, 3, 2, 1, 3, 5, 3, },
+                    Values = new double[] {10,56,45,89,36,54},
                     Fill = new SolidColorPaint(new SKColor(55, 114, 255)),
                     LineSmoothness = 0,
                     GeometrySize = 0,
-                    Stroke = new SolidColorPaint(new SKColor(55, 114, 255)) { StrokeThickness = 2 },
                 }
             };
 
@@ -31,10 +33,9 @@ namespace MaturitniProjekt
            {
             new Axis
             {
-               
                 MinLimit = 0,
                 MaxLimit = 60,
-            
+                IsVisible = false,
             }
         };
 
@@ -42,10 +43,9 @@ namespace MaturitniProjekt
            {
             new Axis
             {
-                
                 MinLimit = 0,
                 MaxLimit = 100,
-
+                IsVisible = false,
             }
         };
     }
