@@ -1,8 +1,8 @@
-﻿using Hardware.Info;
+﻿using System.Windows.Media;
+using Hardware.Info;
 using LibreHardwareMonitor.Hardware;
-using LiveChartsCore;
-using LiveChartsCore.SkiaSharpView;
-using LiveChartsCore.SkiaSharpView.WPF;
+using ScottPlot;
+using ScottPlot.WPF;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,12 +16,13 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using static System.Net.Mime.MediaTypeNames;
+using Color = System.Windows.Media.Color;
+using System.Windows.Markup;
 
 namespace MaturitniProjekt
 {
@@ -30,7 +31,7 @@ namespace MaturitniProjekt
     /// </summary>
     public partial class HomeWindow : Page
     {
-        
+        WpfPlot[] myPlots = new WpfPlot[Environment.ProcessorCount + 1];
         static IHardwareInfo hardwareInfo = new HardwareInfo();
         private bool behTestu = false;
         private bool behTestuAuto = true;
@@ -44,18 +45,19 @@ namespace MaturitniProjekt
         public HomeWindow()
         {
             trida.globalniBeh = true;
+            Dispatcher.InvokeAsync(ziskavaniZateze, DispatcherPriority.SystemIdle);
+            vytvoreniGrafu();
 
             InitializeComponent();
 
-            Thread test = new Thread(ziskavaniZateze);
-            test.Start();
+           
 
             if (trida.prvotniNacteni == 0)
             {
                 trida.prvotniNacteni = 1;
                 hardwareInfo.RefreshCPUList();
             }
-            int pocetProcesoru = 0;
+
             foreach (var cpu in hardwareInfo.CpuList)
             {
                 LBLnazev.Content = cpu.Name;
@@ -65,12 +67,34 @@ namespace MaturitniProjekt
                 LBLmezi1.Content = (cpu.L1DataCacheSize + cpu.L1InstructionCacheSize) / 1024 + "kB";
                 LBLmezi2.Content = cpu.L2CacheSize / 1024 / 1024 + "MB";
                 LBLmezi3.Content = cpu.L3CacheSize / 1024 / 1024 + "MB";
-                pocetProcesoru = (int)cpu.NumberOfLogicalProcessors;
             }
 
-            vytvoreniGrafu(pocetProcesoru);
+
+
 
         }
+
+        #region saveHover
+        private void BTNsave_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (BTNsave.BorderBrush is SolidColorBrush solidColorBrush && solidColorBrush.Color == (Color)ColorConverter.ConvertFromString("#8A94A6"))
+            {
+                BTNsave.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B5D78"));
+                IMGsave.Source = new BitmapImage(new Uri("obrazky/saveH.png", UriKind.RelativeOrAbsolute));
+                LBLsave.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B5D78"));
+            }
+        }
+
+        private void BTNsave_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (BTNsave.BorderBrush is SolidColorBrush solidColorBrush && solidColorBrush.Color == (Color)ColorConverter.ConvertFromString("#4B5D78"))
+            {
+                BTNsave.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
+                IMGsave.Source = new BitmapImage(new Uri("obrazky/save.png", UriKind.RelativeOrAbsolute));
+                LBLsave.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
+            }
+        }
+        #endregion saveHover
 
         #region testHover
         private void TBTNtest_MouseEnter(object sender, MouseEventArgs e)
@@ -98,7 +122,7 @@ namespace MaturitniProjekt
         {
             TBTNtest.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
             IMGtest.Source = new BitmapImage(new Uri("obrazky/on.png", UriKind.RelativeOrAbsolute));
-            
+
         }
 
         private void TBTNtest_Unchecked(object sender, RoutedEventArgs e)
@@ -152,6 +176,15 @@ namespace MaturitniProjekt
         }
         #endregion stopHover
 
+
+        private void BTNsave_Click(object sender, RoutedEventArgs e)
+        {
+            BTNsave.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3772FF"));
+            IMGsave.Source = new BitmapImage(new Uri("obrazky/saveC.png", UriKind.RelativeOrAbsolute));
+            LBLsave.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3772FF"));
+        }
+
+
         private async void BTNstart_Click(object sender, RoutedEventArgs e)
         {
             BTNstart.IsEnabled = false;
@@ -170,7 +203,6 @@ namespace MaturitniProjekt
                 LBLcas.Visibility = Visibility.Hidden;
                 BRDpb.Visibility = Visibility.Visible;
 
-                Dispatcher.InvokeAsync(update, DispatcherPriority.SystemIdle);
                 await zatezovyTest(true);
 
                 LBLskore.Visibility = Visibility.Visible;
@@ -194,7 +226,6 @@ namespace MaturitniProjekt
                 IMGstop.Source = new BitmapImage(new Uri("obrazky/stop.png", UriKind.RelativeOrAbsolute));
                 LBLstop.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
 
-                Dispatcher.InvokeAsync(update, DispatcherPriority.SystemIdle);
                 await zatezovyTest(false);
 
                 LBLskore.Visibility = Visibility.Visible;
@@ -209,14 +240,14 @@ namespace MaturitniProjekt
             BTNstop.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3772FF"));
             IMGstop.Source = new BitmapImage(new Uri("obrazky/stopC.png", UriKind.RelativeOrAbsolute));
             LBLstop.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3772FF"));
-            
+
             BTNstart.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B5D78"));
             IMGstart.Source = new BitmapImage(new Uri("obrazky/startH.png", UriKind.RelativeOrAbsolute));
             LBLstart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B5D78"));
 
             behTestu = false;
             await Task.Delay(1000);
-            
+
             BTNstop.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B5D78"));
             IMGstop.Source = new BitmapImage(new Uri("obrazky/stopH.png", UriKind.RelativeOrAbsolute));
             LBLstop.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4B5D78"));
@@ -227,7 +258,7 @@ namespace MaturitniProjekt
 
             BTNstart.IsEnabled = true;
             TBTNtest.IsEnabled = true;
-           
+
         }
         #region zatezovyTest
         public async Task zatezovyTest(bool automatickyTest)
@@ -262,7 +293,7 @@ namespace MaturitniProjekt
                     await Task.WhenAll(tasky);
                 }
             }
-            
+
         }
         private void zatezovaOperace(int indexJadra, bool automatickyTest)
         {
@@ -270,30 +301,30 @@ namespace MaturitniProjekt
             float vysledek = 0;
             for (int i = 0; i < int.MaxValue; i++)
             {
-                if (automatickyTest == true )
+                if (automatickyTest == true)
                 {
                     if (stopky.Elapsed.TotalSeconds >= 60 || trida.globalniBeh == false)
                     {
                         stopky.Stop();
                         return;
                     }
-                }      
+                }
                 else
                 {
                     if (behTestu == false || trida.globalniBeh == false)
                     {
                         stopky.Stop();
-                        return; 
+                        return;
                     }
                 }
-                
+
                 vysledek += (float)Math.Sqrt(i + indexJadra);
                 trida.skore++;
             }
         }
         private async void update()
         {
-             if (behTestuAuto == true)
+            if (behTestuAuto == true)
             {
                 PBcas.Value = stopky.Elapsed.TotalSeconds;
             }
@@ -305,16 +336,14 @@ namespace MaturitniProjekt
             {
                 return;
             }
-            Dispatcher.InvokeAsync(update, DispatcherPriority.SystemIdle);
         }
 
         #endregion zatezovyTest
         private async void ziskavaniZateze()
         {
             computer.Open();
-            while (true) 
-            {
-                await Task.Delay(1000);
+
+                await Task.Delay(950);
                 foreach (var hardwareItem in computer.Hardware)
                 {
                     if (hardwareItem.HardwareType == HardwareType.Cpu)
@@ -352,8 +381,10 @@ namespace MaturitniProjekt
                     }
 
                 }
+            aktualizaceGrafu();
+            update();
+            Dispatcher.InvokeAsync(ziskavaniZateze, DispatcherPriority.SystemIdle);
             
-            }
         }
 
         private void kontrolaPoctuZaznamu(string nazevIndexu)
@@ -365,9 +396,59 @@ namespace MaturitniProjekt
             }
         }
 
-        private void vytvoreniGrafu(int pocetJader)
+        private void aktualizaceGrafu()
         {
-            for (int i = 0; i < pocetJader; i++)
+            trida.dataX.Clear();
+            for (int f = 0; f < trida.zatezJader["total"].Count; f++)
+            {
+                trida.dataX.Add(f);
+            }
+            pridaniScatteru(12, "total");
+
+            for (int i = 0; i < Environment.ProcessorCount; i++)
+            {
+                int formatIndexu = i + 1;
+                string indexJadra = formatIndexu.ToString();
+
+                pridaniScatteru(i, indexJadra);
+            }
+        }
+
+        private void pridaniScatteru(int indexGrafu, string indexJadra)
+        {
+            var scatter = myPlots[indexGrafu].Plot.Add.ScatterLine(trida.dataX, trida.zatezJader[indexJadra]);
+            scatter.LineWidth = 3;
+            scatter.Color = ScottPlot.Color.FromHex("#3772FF");
+            myPlots[indexGrafu].Refresh();
+        }
+
+
+        private void vytvoreniGrafu()
+        {
+            ScottPlot.Control.InputBindings customInputBindings = new() { };
+
+            myPlots[12] = new WpfPlot
+            {
+                Height = 150,
+                Width = 531,
+            };
+
+            myPlots[12].Plot.Axes.SetLimits(0, 60, -5, 100);
+            myPlots[12].Plot.Axes.Left.IsVisible = false;
+            myPlots[12].Plot.Axes.Bottom.IsVisible = false;
+            myPlots[12].Plot.Axes.Right.IsVisible = false;
+            myPlots[12].Plot.Axes.Top.IsVisible = false;
+            ScottPlot.Control.Interaction interaction0 = new(myPlots[0])
+            {
+                Inputs = customInputBindings,
+                Actions = ScottPlot.Control.PlotActions.NonInteractive(),
+            };
+            myPlots[12].Interaction = interaction0;
+
+            graf.Child = myPlots[12];
+
+
+            for (int i = 0; i < Environment.ProcessorCount; i++)
             {
                 WrapPanel wrapPanel = new WrapPanel
                 {
@@ -384,12 +465,25 @@ namespace MaturitniProjekt
                     Padding = new Thickness(5)
                 };
 
-                CartesianChart chart1 = new CartesianChart();
-                chart1.SetBinding(CartesianChart.SeriesProperty, new Binding("Series" + i));
-                chart1.SetBinding(CartesianChart.XAxesProperty, new Binding("XAxes"));
-                chart1.SetBinding(CartesianChart.YAxesProperty, new Binding("YAxes"));
+                myPlots[i] = new WpfPlot
+                {
+                    Height = 100,
+                    Width = 260.5,
+                };
 
-                border1.Child = chart1;
+                myPlots[i].Plot.Axes.SetLimits(0, 60, -13, 100);
+                myPlots[i].Plot.Axes.Left.IsVisible = false;
+                myPlots[i].Plot.Axes.Bottom.IsVisible = false;
+                myPlots[i].Plot.Axes.Right.IsVisible = false;
+                myPlots[i].Plot.Axes.Top.IsVisible = false; 
+                ScottPlot.Control.Interaction interaction = new(myPlots[i])
+                {
+                    Inputs = customInputBindings,
+                    Actions = ScottPlot.Control.PlotActions.NonInteractive(),
+                };
+                myPlots[i].Interaction = interaction;
+
+                border1.Child = myPlots[i];
 
                 Border border2 = new Border
                 {
@@ -403,19 +497,36 @@ namespace MaturitniProjekt
 
                 i++;
 
-                CartesianChart chart2 = new CartesianChart();
-                chart2.SetBinding(CartesianChart.SeriesProperty, new Binding("Series" + i));
-                chart2.SetBinding(CartesianChart.XAxesProperty, new Binding("XAxes"));
-                chart2.SetBinding(CartesianChart.YAxesProperty, new Binding("YAxes"));
+                myPlots[i] = new WpfPlot
+                {
+                    Height = 100,
+                    Width = 260.5,
+                };
 
-                border2.Child = chart2;
+                myPlots[i].Plot.Axes.SetLimits(0, 60, -13, 100);
+                myPlots[i].Plot.Axes.Left.IsVisible = false;
+                myPlots[i].Plot.Axes.Bottom.IsVisible = false;
+                myPlots[i].Plot.Axes.Right.IsVisible = false;
+                myPlots[i].Plot.Axes.Top.IsVisible = false;
+                
+                ScottPlot.Control.Interaction interaction1 = new(myPlots[i])
+                {
+                    Inputs = customInputBindings,
+                    Actions = ScottPlot.Control.PlotActions.NonInteractive(),
+                };
+                myPlots[i].Interaction = interaction1;
+
+
+
+
+                border2.Child = myPlots[i];
 
                 wrapPanel.Children.Add(border1);
                 wrapPanel.Children.Add(border2);
 
                 grafy.Children.Add(wrapPanel);
             }
-            
         }
+
     }
 }

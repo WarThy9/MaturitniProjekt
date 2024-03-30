@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="648" d:DesignWidth="1036"
       Title="HomeWindow"
-      xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF">
+      xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF">
 
     <Page.Resources>
         <Style TargetType="Button" x:Key="NoHoverButtonStyle">
@@ -202,10 +202,15 @@
                                        Width="71" 
                                        TextWrapping="WrapWithOverflow" 
                                        Foreground="#8A94A6"
-                                       FontFamily="Bahnschrift Condensed" FontSize="16" Height="34" Margin="10,0,0,2" />
+                                       FontFamily="Bahnschrift Condensed" 
+                                       FontSize="16" 
+                                       Height="34" 
+                                       Margin="10,0,0,2" />
                         </WrapPanel>
 
                     </StackPanel>
+                    
+                    
                     <Border BorderBrush="#8A94A6"
                             BorderThickness="2"
                             Grid.Column="1"
@@ -242,6 +247,54 @@
                            Foreground="#8A94A6"
                            Visibility="Hidden"
                            x:Name="LBLskore"/>
+
+                    <Button Width="82"
+                            Height="30"
+                            Grid.Column="1"
+                            Background="#131725"
+                            BorderThickness="2"
+                            BorderBrush="#8A94A6" 
+                            HorizontalAlignment="Left" 
+                            Margin="0,0,10,10"
+                            Padding="-2"
+                            Style="{StaticResource NoHoverButtonStyle}"
+                            x:Name="BTNsave" 
+                            MouseEnter="BTNsave_MouseEnter" 
+                            MouseLeave="BTNsave_MouseLeave" 
+                            Click="BTNsave_Click" 
+                            VerticalAlignment="Bottom">
+
+                        <Button.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" 
+                                        Value="15"/>
+                            </Style>
+                        </Button.Resources>
+
+                        <WrapPanel Width="125">
+                            <Image Source="obrazky/save.png"
+                                           Width="18"
+                                           Height="18" 
+                                           Margin="10,0,0,0" 
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           x:Name="IMGsave"/>
+
+                            <Label Content="Uložit"
+                                   FontFamily="Bahnschrift Condensed" 
+                                   Foreground="#8A94A6" 
+                                   VerticalContentAlignment="Center" 
+                                   HorizontalContentAlignment="Center" 
+                                   FontSize="18" 
+                                   VerticalAlignment="Center" 
+                                   Height="30" 
+                                   
+                                   Margin="0,0,10,0"
+                                   x:Name="LBLsave"/>
+
+                        </WrapPanel>
+                    </Button>
+
                 </Grid>
 
             </Border>
@@ -397,12 +450,10 @@
                     Margin="20,20,20,0"
                     CornerRadius="10"
                     Background="#131725"
-                    Padding="5">
-                <lvc:CartesianChart
-                    Series="{Binding Series}"
-                    XAxes="{Binding XAxes}"
-                    YAxes="{Binding YAxes}">
-                </lvc:CartesianChart>
+                    Padding="5"
+                    x:Name="graf">
+                
+                
 
             </Border>
 
@@ -421,7 +472,4 @@
     
     </Grid>
 
-    <Page.DataContext>
-        <local:ViewModel/>
-    </Page.DataContext>
 </Page>
