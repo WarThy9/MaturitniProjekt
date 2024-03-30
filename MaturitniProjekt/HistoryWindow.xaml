@@ -7,8 +7,46 @@
       mc:Ignorable="d" 
       d:DesignHeight="648" d:DesignWidth="1036"
       Title="HistoryWindow">
+  
 
-    <Grid/>
+    <Grid>
+        <DataGrid x:Name="dataGrid"
+          IsReadOnly="True"
+          Background="Transparent"
+          BorderThickness="5"
+          CanUserResizeColumns="False"
+          CanUserResizeRows="False"
+          Margin="20" 
+          RowBackground="#131725">
+
+
+
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="5" />
+                    <Setter Property="FontSize" Value="17"/>
+                    <Setter Property="Foreground" Value="#8A94A6"/>
+                </Style>
+            </DataGrid.CellStyle>
+            
+            <DataGrid.ColumnHeaderStyle> 
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="FontSize" Value="17"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+
+        </DataGrid>
+
+        <Border BorderBrush="#1d2335"
+                BorderThickness="10px"
+                CornerRadius="10"
+                Margin="10">
+            
+        </Border>
+        
+    </Grid>
     
+
     
 </Page>

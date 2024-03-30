@@ -63,7 +63,7 @@
 
             <Label Content="Zátěžový test procesoru" 
                    Foreground="White" 
-                   FontSize="24" 
+                   FontSize="30" 
                    Margin="20,20,0,0" 
                    HorizontalAlignment="Left" 
                    VerticalAlignment="Top"/>
@@ -209,8 +209,8 @@
                         </WrapPanel>
 
                     </StackPanel>
-                    
-                    
+
+
                     <Border BorderBrush="#8A94A6"
                             BorderThickness="2"
                             Grid.Column="1"
@@ -311,65 +311,64 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="27*"/>
-                        <ColumnDefinition Width="62*"/>
+                        <ColumnDefinition Width="159*"/>
+                        <ColumnDefinition Width="281*"/>
                     </Grid.ColumnDefinitions>
 
                     <Label Content="Informace o procesoru"
                            Foreground="White" 
-                           FontSize="18" 
+                           FontSize="24" 
                            VerticalAlignment="Center" 
                            HorizontalAlignment="Left" 
                            Margin="10,0,0,0"
-                           Grid.ColumnSpan="2" Height="34" Width="190"/>
+                           Grid.ColumnSpan="2" Height="44" Width="251"/>
 
                     <StackPanel Grid.Column="0" Grid.Row="1">
 
                         <Label Content="Název:"
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Základní rychlost:"
                                Foreground="#8A94A6" 
-                               FontSize="14" 
-                               VerticalAlignment="Top" 
+                               FontSize="17" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Jádra:"
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Logické procesory:"
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Mezipamět L1:"
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Mezipamět L2:"
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Mezipamět L3:"
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,10"/>
@@ -380,7 +379,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -388,7 +387,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -396,7 +395,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -404,7 +403,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -412,7 +411,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -420,7 +419,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -428,7 +427,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="14" 
+                               FontSize="17" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,10"
@@ -442,18 +441,18 @@
 
         </StackPanel>
 
-        
-        
+
+
         <StackPanel Grid.Column="1">
-            
+
             <Border Width="auto" Height="150"
                     Margin="20,20,20,0"
                     CornerRadius="10"
                     Background="#131725"
                     Padding="5"
                     x:Name="graf">
-                
-                
+
+
 
             </Border>
 
@@ -462,14 +461,14 @@
                           VerticalScrollBarVisibility="Auto">
 
                 <StackPanel x:Name="grafy">
-                    
+
 
                 </StackPanel>
-                
+
             </ScrollViewer>
 
         </StackPanel>
-    
+
     </Grid>
 
 </Page>

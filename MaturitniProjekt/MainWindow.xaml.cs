@@ -1,6 +1,8 @@
 ﻿using Hardware.Info;
 using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
@@ -23,10 +25,24 @@ namespace MaturitniProjekt
     public partial class MainWindow : Window
     {
         static readonly IHardwareInfo hardwareInfo = new HardwareInfo();
+        private SQLiteConnection connection;
         public MainWindow()
         {
-            hardwareInfo.RefreshCPUList();
             InitializeComponent();
+
+            string appDataCesta = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string cestaKSlozce = System.IO.Path.Combine(appDataCesta, "zatezovyTest");
+
+            if (!Directory.Exists(cestaKSlozce))
+            {
+                Directory.CreateDirectory(cestaKSlozce);
+            }
+
+            globalniPromenne.cestaKDatabazi = System.IO.Path.Combine(cestaKSlozce, "historie.db");
+            connection = new SQLiteConnection($"Data Source={globalniPromenne.cestaKDatabazi};Version=3;");
+            vytvoreniTabulky();
+            
+            
 
             hlavniFrame.Content = new HomeWindow();
             LBLhome.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3772FF"));
@@ -160,5 +176,24 @@ namespace MaturitniProjekt
         }
         #endregion vypnuti
 
+
+        private void vytvoreniTabulky()
+        {
+            string dotazProVytvoreniTabulky = @"CREATE TABLE IF NOT EXISTS historie (
+                                                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                                                Datum DATE,
+                                                NazevProcesoru CHAR(255),
+                                                Skore INT,
+                                                AutomatickyTest CHAR(5),
+                                                Cas INT)";
+            
+            using (SQLiteCommand command = new SQLiteCommand(dotazProVytvoreniTabulky, connection))
+            {
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+            connection.Close();
+
+        }
     }
 }

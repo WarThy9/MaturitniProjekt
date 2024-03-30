@@ -104,6 +104,8 @@
     <PackageReference Include="Hardware.Info" Version="100.1.0" />
     <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.3" />
     <PackageReference Include="ScottPlot.WPF" Version="5.0.23" />
+    <PackageReference Include="Syncfusion.SfGrid.WPF" Version="25.1.37" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118" />
   </ItemGroup>
 
 </Project>

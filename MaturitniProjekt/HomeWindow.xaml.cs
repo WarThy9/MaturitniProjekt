@@ -23,6 +23,8 @@ using System.Windows.Threading;
 using static System.Net.Mime.MediaTypeNames;
 using Color = System.Windows.Media.Color;
 using System.Windows.Markup;
+using System.Data.SQLite;
+using ScottPlot.Plottables;
 
 namespace MaturitniProjekt
 {
@@ -33,9 +35,15 @@ namespace MaturitniProjekt
     {
         WpfPlot[] myPlots = new WpfPlot[Environment.ProcessorCount + 1];
         static IHardwareInfo hardwareInfo = new HardwareInfo();
+        List<int> dataX = new List<int>();
+        Dictionary<string, List<int>> zatezJader = new Dictionary<string, List<int>>();
+        long skore;
+        int cas;
         private bool behTestu = false;
         private bool behTestuAuto = true;
         Stopwatch stopky = new Stopwatch();
+        private SQLiteConnection connection;
+        string jmenoProcesoru;
         Computer computer = new Computer
         {
             IsCpuEnabled = true
@@ -44,22 +52,23 @@ namespace MaturitniProjekt
 
         public HomeWindow()
         {
-            trida.globalniBeh = true;
+            globalniPromenne.globalniBeh = true;
             Dispatcher.InvokeAsync(ziskavaniZateze, DispatcherPriority.SystemIdle);
-            vytvoreniGrafu();
 
             InitializeComponent();
 
-           
+            connection = new SQLiteConnection($"Data Source={globalniPromenne.cestaKDatabazi};Version=3;");
+            vytvoreniGrafu();
 
-            if (trida.prvotniNacteni == 0)
+            if (globalniPromenne.prvotniNacteni == false)
             {
-                trida.prvotniNacteni = 1;
+                globalniPromenne.prvotniNacteni = true;
                 hardwareInfo.RefreshCPUList();
             }
 
             foreach (var cpu in hardwareInfo.CpuList)
             {
+                jmenoProcesoru = cpu.Name;
                 LBLnazev.Content = cpu.Name;
                 LBLrychlost.Content = cpu.MaxClockSpeed;
                 LBLjadra.Content = cpu.NumberOfCores;
@@ -68,9 +77,6 @@ namespace MaturitniProjekt
                 LBLmezi2.Content = cpu.L2CacheSize / 1024 / 1024 + "MB";
                 LBLmezi3.Content = cpu.L3CacheSize / 1024 / 1024 + "MB";
             }
-
-
-
 
         }
 
@@ -182,6 +188,14 @@ namespace MaturitniProjekt
             BTNsave.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3772FF"));
             IMGsave.Source = new BitmapImage(new Uri("obrazky/saveC.png", UriKind.RelativeOrAbsolute));
             LBLsave.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3772FF"));
+
+            vlozeniDoTabulky();
+
+            MessageBox.Show("Záznam uložen do historie");
+
+            BTNsave.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
+            IMGsave.Source = new BitmapImage(new Uri("obrazky/save.png", UriKind.RelativeOrAbsolute));
+            LBLsave.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
         }
 
 
@@ -195,7 +209,8 @@ namespace MaturitniProjekt
 
             LBLskore.Visibility = Visibility.Hidden;
             LBLskore.Content = 0;
-            trida.skore = 0;
+            skore = 0;
+            stopky.Reset();
 
             if (TBTNtest.IsChecked == false) //auto
             {
@@ -203,10 +218,13 @@ namespace MaturitniProjekt
                 LBLcas.Visibility = Visibility.Hidden;
                 BRDpb.Visibility = Visibility.Visible;
 
+                stopky.Start();
                 await zatezovyTest(true);
 
                 LBLskore.Visibility = Visibility.Visible;
-                LBLskore.Content = $"Skore: {(int)(trida.skore / 100 / stopky.Elapsed.TotalSeconds)}";
+                cas = 60;
+                skore = (long)(skore / 100 / cas);
+                LBLskore.Content = $"Skore: {skore}";
 
                 BTNstart.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
                 IMGstart.Source = new BitmapImage(new Uri("obrazky/start.png", UriKind.RelativeOrAbsolute));
@@ -225,11 +243,17 @@ namespace MaturitniProjekt
                 BTNstop.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
                 IMGstop.Source = new BitmapImage(new Uri("obrazky/stop.png", UriKind.RelativeOrAbsolute));
                 LBLstop.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
-
+                
+                stopky.Start();
                 await zatezovyTest(false);
 
                 LBLskore.Visibility = Visibility.Visible;
-                LBLskore.Content = $"Skore: {(int)(trida.skore / 100 / stopky.Elapsed.TotalSeconds)}";
+                string prevod = LBLcas.Content.ToString();
+                string uprava = prevod.Substring(0, prevod.Length - 1);
+                string uprava1 = uprava.Substring(5);
+                cas = Convert.ToInt32(uprava1);
+                skore = (long)(skore / 100 / cas);
+                LBLskore.Content = $"Skore: {skore}";
             }
         }
 
@@ -263,11 +287,10 @@ namespace MaturitniProjekt
         #region zatezovyTest
         public async Task zatezovyTest(bool automatickyTest)
         {
-            stopky.Reset();
-            stopky.Start();
+            
             if (automatickyTest == true)
             {
-                while (stopky.Elapsed.TotalSeconds < 61 && trida.globalniBeh == true)
+                while (stopky.Elapsed.TotalSeconds < 61 && globalniPromenne.globalniBeh == true)
                 {
                     Task[] tasky = new Task[Environment.ProcessorCount];
                     for (int i = 0; i < tasky.Length; i++)
@@ -281,7 +304,7 @@ namespace MaturitniProjekt
             }
             else
             {
-                while (behTestu == true && trida.globalniBeh == true)
+                while (behTestu == true && globalniPromenne.globalniBeh == true)
                 {
                     Task[] tasky = new Task[Environment.ProcessorCount];
                     for (int i = 0; i < tasky.Length; i++)
@@ -303,23 +326,25 @@ namespace MaturitniProjekt
             {
                 if (automatickyTest == true)
                 {
-                    if (stopky.Elapsed.TotalSeconds >= 60 || trida.globalniBeh == false)
+                    if (stopky.Elapsed.TotalSeconds >= 60 || globalniPromenne.globalniBeh == false)
                     {
                         stopky.Stop();
+
                         return;
                     }
                 }
                 else
                 {
-                    if (behTestu == false || trida.globalniBeh == false)
+                    if (behTestu == false || globalniPromenne.globalniBeh == false)
                     {
                         stopky.Stop();
+
                         return;
                     }
                 }
 
                 vysledek += (float)Math.Sqrt(i + indexJadra);
-                trida.skore++;
+                skore++;
             }
         }
         private async void update()
@@ -339,6 +364,8 @@ namespace MaturitniProjekt
         }
 
         #endregion zatezovyTest
+
+        #region grafy
         private async void ziskavaniZateze()
         {
             computer.Open();
@@ -359,22 +386,22 @@ namespace MaturitniProjekt
 
                                 if (sensor.Name.Contains("Total"))
                                 {
-                                    if (!trida.zatezJader.ContainsKey("total"))
+                                    if (!zatezJader.ContainsKey("total"))
                                     {
-                                        trida.zatezJader["total"] = new List<int>();
+                                        zatezJader["total"] = new List<int>();
                                     }
                                     kontrolaPoctuZaznamu("total");
-                                    trida.zatezJader["total"].Add(formatovanaZatez);
+                                    zatezJader["total"].Add(formatovanaZatez);
                                 }
                                 else if (sensor.Name.Contains("#"))
                                 {
                                     string formatovaneJmeno = sensor.Name.Substring(sensor.Name.IndexOf("#") + 1);
-                                    if (!trida.zatezJader.ContainsKey(formatovaneJmeno))
+                                    if (!zatezJader.ContainsKey(formatovaneJmeno))
                                     {
-                                        trida.zatezJader[formatovaneJmeno] = new List<int>();
+                                        zatezJader[formatovaneJmeno] = new List<int>();
                                     }
                                     kontrolaPoctuZaznamu(formatovaneJmeno);
-                                    trida.zatezJader[formatovaneJmeno].Add(formatovanaZatez);
+                                    zatezJader[formatovaneJmeno].Add(formatovanaZatez);
                                 }
                             }
                         }
@@ -389,19 +416,19 @@ namespace MaturitniProjekt
 
         private void kontrolaPoctuZaznamu(string nazevIndexu)
         {
-            int pocetIndexu = trida.zatezJader[nazevIndexu].Count;
+            int pocetIndexu = zatezJader[nazevIndexu].Count;
             if (pocetIndexu == 60)
             {
-                trida.zatezJader[nazevIndexu].RemoveAt(0);
+                zatezJader[nazevIndexu].RemoveAt(0);
             }
         }
 
         private void aktualizaceGrafu()
         {
-            trida.dataX.Clear();
-            for (int f = 0; f < trida.zatezJader["total"].Count; f++)
+            dataX.Clear();
+            for (int f = 0; f < zatezJader["total"].Count; f++)
             {
-                trida.dataX.Add(f);
+                dataX.Add(f);
             }
             pridaniScatteru(12, "total");
 
@@ -416,7 +443,7 @@ namespace MaturitniProjekt
 
         private void pridaniScatteru(int indexGrafu, string indexJadra)
         {
-            var scatter = myPlots[indexGrafu].Plot.Add.ScatterLine(trida.dataX, trida.zatezJader[indexJadra]);
+            var scatter = myPlots[indexGrafu].Plot.Add.ScatterLine(dataX, zatezJader[indexJadra]);
             scatter.LineWidth = 3;
             scatter.Color = ScottPlot.Color.FromHex("#3772FF");
             myPlots[indexGrafu].Refresh();
@@ -516,9 +543,6 @@ namespace MaturitniProjekt
                 };
                 myPlots[i].Interaction = interaction1;
 
-
-
-
                 border2.Child = myPlots[i];
 
                 wrapPanel.Children.Add(border1);
@@ -527,6 +551,26 @@ namespace MaturitniProjekt
                 grafy.Children.Add(wrapPanel);
             }
         }
+        #endregion grafy
 
+        private void vlozeniDoTabulky()
+        {
+            string beh;
+            if (behTestuAuto)
+                beh = "Ano";
+            else
+                beh = "Ne";
+
+            string vkladaciDotaz = $@"INSERT INTO historie (Datum, NazevProcesoru, Skore, AutomatickyTest, Cas)
+                                     VALUES (CURRENT_TIMESTAMP, '{jmenoProcesoru}', {skore}, '{beh}', {cas})";
+
+            using (SQLiteCommand command = new SQLiteCommand(vkladaciDotaz, connection))
+            {
+                connection.Open();
+                command.ExecuteNonQuery();
+            }
+            connection.Close();
+
+        }
     }
 }
