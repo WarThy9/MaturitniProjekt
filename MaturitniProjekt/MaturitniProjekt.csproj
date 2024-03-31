@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="obrazky\delete.png" />
+    <None Remove="obrazky\deleteC.png" />
+    <None Remove="obrazky\deleteH.png" />
     <None Remove="obrazky\history.png" />
     <None Remove="obrazky\historyC.png" />
     <None Remove="obrazky\historyH.png" />
@@ -32,6 +35,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="obrazky\delete.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="obrazky\deleteC.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="obrazky\deleteH.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="obrazky\history.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

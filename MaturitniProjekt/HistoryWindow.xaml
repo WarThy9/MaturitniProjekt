@@ -5,48 +5,109 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MaturitniProjekt"
       mc:Ignorable="d" 
+      xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
       d:DesignHeight="648" d:DesignWidth="1036"
       Title="HistoryWindow">
-  
 
+
+            <Page.Resources>
+        <Style x:Key="SfDataGridRowStyle" TargetType="{x:Type syncfusion:VirtualizingCellsControl}">
+            <Setter Property="Background" Value="#131725"/>
+            <Setter Property="Foreground" Value="#8A94A6"/>
+        </Style>
+        <Style TargetType="syncfusion:GridHeaderCellControl" x:Key="headerStyle">
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="Foreground" Value="white"/>
+        </Style>
+        <Style TargetType="syncfusion:HeaderRowControl">
+            <Setter Property="Background" Value="#131725"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style TargetType="Button" x:Key="NoHoverButtonStyle">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource Self}}" />
+                    <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </Page.Resources>
+    
     <Grid>
-        <DataGrid x:Name="dataGrid"
-          IsReadOnly="True"
-          Background="Transparent"
-          BorderThickness="5"
-          CanUserResizeColumns="False"
-          CanUserResizeRows="False"
-          Margin="20" 
-          RowBackground="#131725">
 
+        <Button Width="260"
+        Height="50"
+        Background="#131725"
+        BorderThickness="2"
+        BorderBrush="#8A94A6" 
+        HorizontalAlignment="Right" 
+        Margin="20,20,20,20"
+        Padding="-2"
+        Style="{StaticResource NoHoverButtonStyle}"
+        x:Name="BTNdelete"
+        MouseEnter="BTNdelete_MouseEnter" 
+        MouseLeave="BTNdelete_MouseLeave" 
+        Click="BTNdelete_Click" 
+        VerticalAlignment="Top">
 
-
-            <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell">
-                    <Setter Property="BorderThickness" Value="5" />
-                    <Setter Property="FontSize" Value="17"/>
-                    <Setter Property="Foreground" Value="#8A94A6"/>
+            <Button.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" 
+            Value="25"/>
                 </Style>
-            </DataGrid.CellStyle>
-            
-            <DataGrid.ColumnHeaderStyle> 
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="FontSize" Value="17"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                </Style>
-            </DataGrid.ColumnHeaderStyle>
+            </Button.Resources>
 
-        </DataGrid>
+            <WrapPanel Width="260" HorizontalAlignment="Center">
+                <Image Source="obrazky/delete.png"
+                       Width="30"
+                       Height="30" 
+                       Margin="20,0,0,0" 
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       x:Name="IMGdelete"/>
 
-        <Border BorderBrush="#1d2335"
-                BorderThickness="10px"
-                CornerRadius="10"
-                Margin="10">
-            
-        </Border>
-        
+                <Label Content="Smazání záznamu"
+               FontFamily="Bahnschrift Condensed" 
+               Foreground="#8A94A6" 
+               VerticalContentAlignment="Center" 
+               HorizontalContentAlignment="Center" 
+               FontSize="30" 
+               VerticalAlignment="Center" 
+               Height="50"  
+               Padding="8.5" 
+               Margin="0,0,10,0"
+               x:Name="LBLdelete"/>
+
+            </WrapPanel>
+        </Button>
+
+        <syncfusion:SfDataGrid RowStyle="{DynamicResource SfDataGridRowStyle}" 
+                               HeaderStyle="{StaticResource headerStyle}"
+                               x:Name="dataGrid"
+                               RowSelectionBrush="#3772FF"
+                               HeaderRowHeight="30"
+                               RowHeight="30"
+                               ColumnSizer="Auto"
+                               BorderThickness="1"
+                               Width="auto"
+                               Height="auto"
+                               Margin="20,20,0,20" 
+                               HorizontalAlignment="Left" VerticalAlignment="Top"/>
+
     </Grid>
-    
 
-    
 </Page>

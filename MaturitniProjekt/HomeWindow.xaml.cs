@@ -25,6 +25,7 @@ using Color = System.Windows.Media.Color;
 using System.Windows.Markup;
 using System.Data.SQLite;
 using ScottPlot.Plottables;
+using ScottPlot.Hatches;
 
 namespace MaturitniProjekt
 {
@@ -59,6 +60,7 @@ namespace MaturitniProjekt
 
             connection = new SQLiteConnection($"Data Source={globalniPromenne.cestaKDatabazi};Version=3;");
             vytvoreniGrafu();
+            
 
             if (globalniPromenne.prvotniNacteni == false)
             {
@@ -208,6 +210,7 @@ namespace MaturitniProjekt
             LBLstart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3772FF"));
 
             LBLskore.Visibility = Visibility.Hidden;
+            BTNsave.Visibility = Visibility.Hidden;
             LBLskore.Content = 0;
             skore = 0;
             stopky.Reset();
@@ -225,6 +228,7 @@ namespace MaturitniProjekt
                 cas = 60;
                 skore = (long)(skore / 100 / cas);
                 LBLskore.Content = $"Skore: {skore}";
+                BTNsave.Visibility = Visibility.Visible;
 
                 BTNstart.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#8A94A6"));
                 IMGstart.Source = new BitmapImage(new Uri("obrazky/start.png", UriKind.RelativeOrAbsolute));
@@ -254,6 +258,7 @@ namespace MaturitniProjekt
                 cas = Convert.ToInt32(uprava1);
                 skore = (long)(skore / 100 / cas);
                 LBLskore.Content = $"Skore: {skore}";
+                BTNsave.Visibility = Visibility.Visible;
             }
         }
 
@@ -452,6 +457,7 @@ namespace MaturitniProjekt
 
         private void vytvoreniGrafu()
         {
+
             ScottPlot.Control.InputBindings customInputBindings = new() { };
 
             myPlots[12] = new WpfPlot
@@ -465,7 +471,9 @@ namespace MaturitniProjekt
             myPlots[12].Plot.Axes.Bottom.IsVisible = false;
             myPlots[12].Plot.Axes.Right.IsVisible = false;
             myPlots[12].Plot.Axes.Top.IsVisible = false;
-            ScottPlot.Control.Interaction interaction0 = new(myPlots[0])
+            myPlots[12].Plot.Grid.MajorLineColor = ScottPlot.Color.FromHex("#8A94A6");
+            myPlots[12].Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#131725");
+            ScottPlot.Control.Interaction interaction0 = new(myPlots[12])
             {
                 Inputs = customInputBindings,
                 Actions = ScottPlot.Control.PlotActions.NonInteractive(),
@@ -502,7 +510,9 @@ namespace MaturitniProjekt
                 myPlots[i].Plot.Axes.Left.IsVisible = false;
                 myPlots[i].Plot.Axes.Bottom.IsVisible = false;
                 myPlots[i].Plot.Axes.Right.IsVisible = false;
-                myPlots[i].Plot.Axes.Top.IsVisible = false; 
+                myPlots[i].Plot.Axes.Top.IsVisible = false;
+                myPlots[i].Plot.Grid.MajorLineColor = ScottPlot.Color.FromHex("#8A94A6");
+                myPlots[i].Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#131725");
                 ScottPlot.Control.Interaction interaction = new(myPlots[i])
                 {
                     Inputs = customInputBindings,
@@ -535,7 +545,8 @@ namespace MaturitniProjekt
                 myPlots[i].Plot.Axes.Bottom.IsVisible = false;
                 myPlots[i].Plot.Axes.Right.IsVisible = false;
                 myPlots[i].Plot.Axes.Top.IsVisible = false;
-                
+                myPlots[i].Plot.Grid.MajorLineColor = ScottPlot.Color.FromHex("#8A94A6");
+                myPlots[i].Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#131725");
                 ScottPlot.Control.Interaction interaction1 = new(myPlots[i])
                 {
                     Inputs = customInputBindings,

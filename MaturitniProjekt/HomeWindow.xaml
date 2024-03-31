@@ -251,6 +251,7 @@
                     <Button Width="82"
                             Height="30"
                             Grid.Column="1"
+                            Visibility="Hidden"
                             Background="#131725"
                             BorderThickness="2"
                             BorderBrush="#8A94A6" 
