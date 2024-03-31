@@ -40,6 +40,7 @@ namespace MaturitniProjekt
         Dictionary<string, List<int>> zatezJader = new Dictionary<string, List<int>>();
         long skore;
         int cas;
+        int overeniCasu;
         private bool behTestu = false;
         private bool behTestuAuto = true;
         Stopwatch stopky = new Stopwatch();
@@ -54,13 +55,17 @@ namespace MaturitniProjekt
         public HomeWindow()
         {
             globalniPromenne.globalniBeh = true;
-            Dispatcher.InvokeAsync(ziskavaniZateze, DispatcherPriority.SystemIdle);
-
+            
             InitializeComponent();
 
             connection = new SQLiteConnection($"Data Source={globalniPromenne.cestaKDatabazi};Version=3;");
+
             vytvoreniGrafu();
-            
+
+            Thread zatez = new Thread(ziskavaniZateze);
+            zatez.Start();
+
+            Dispatcher.InvokeAsync(update, DispatcherPriority.SystemIdle);
 
             if (globalniPromenne.prvotniNacteni == false)
             {
@@ -79,7 +84,6 @@ namespace MaturitniProjekt
                 LBLmezi2.Content = cpu.L2CacheSize / 1024 / 1024 + "MB";
                 LBLmezi3.Content = cpu.L3CacheSize / 1024 / 1024 + "MB";
             }
-
         }
 
         #region saveHover
@@ -213,6 +217,7 @@ namespace MaturitniProjekt
             BTNsave.Visibility = Visibility.Hidden;
             LBLskore.Content = 0;
             skore = 0;
+            overeniCasu = 1;
             stopky.Reset();
 
             if (TBTNtest.IsChecked == false) //auto
@@ -325,7 +330,6 @@ namespace MaturitniProjekt
         }
         private void zatezovaOperace(int indexJadra, bool automatickyTest)
         {
-            // Simulate intensive computation
             float vysledek = 0;
             for (int i = 0; i < int.MaxValue; i++)
             {
@@ -354,18 +358,23 @@ namespace MaturitniProjekt
         }
         private async void update()
         {
-            if (behTestuAuto == true)
+            if (stopky.Elapsed.TotalSeconds >= overeniCasu)
             {
-                PBcas.Value = stopky.Elapsed.TotalSeconds;
+                overeniCasu++;
+                if (behTestuAuto == true)
+                {
+                    PBcas.Value = stopky.Elapsed.TotalSeconds;
+                }
+                else if (behTestu == true)
+                {
+                    LBLcas.Content = $"Čas: {(int)stopky.Elapsed.TotalSeconds}s";
+                }
+                else
+                {
+                    return;
+                }
             }
-            else if (behTestu == true)
-            {
-                LBLcas.Content = $"Čas: {(int)stopky.Elapsed.TotalSeconds}s";
-            }
-            else
-            {
-                return;
-            }
+            Dispatcher.InvokeAsync(update, DispatcherPriority.SystemIdle);
         }
 
         #endregion zatezovyTest
@@ -374,8 +383,9 @@ namespace MaturitniProjekt
         private async void ziskavaniZateze()
         {
             computer.Open();
-
-                await Task.Delay(950);
+            while (true)
+            {
+                await Task.Delay(1000);
                 foreach (var hardwareItem in computer.Hardware)
                 {
                     if (hardwareItem.HardwareType == HardwareType.Cpu)
@@ -413,10 +423,13 @@ namespace MaturitniProjekt
                     }
 
                 }
-            aktualizaceGrafu();
-            update();
-            Dispatcher.InvokeAsync(ziskavaniZateze, DispatcherPriority.SystemIdle);
-            
+                aktualizaceGrafu();
+            }
+
+
+
+            //Dispatcher.InvokeAsync(ziskavaniZateze, DispatcherPriority.SystemIdle);
+
         }
 
         private void kontrolaPoctuZaznamu(string nazevIndexu)
@@ -466,13 +479,18 @@ namespace MaturitniProjekt
                 Width = 531,
             };
 
-            myPlots[12].Plot.Axes.SetLimits(0, 60, -5, 100);
+            myPlots[12].Plot.Axes.SetLimits(0.1, 60, -5, 99.9);
             myPlots[12].Plot.Axes.Left.IsVisible = false;
             myPlots[12].Plot.Axes.Bottom.IsVisible = false;
             myPlots[12].Plot.Axes.Right.IsVisible = false;
             myPlots[12].Plot.Axes.Top.IsVisible = false;
             myPlots[12].Plot.Grid.MajorLineColor = ScottPlot.Color.FromHex("#8A94A6");
             myPlots[12].Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#131725");
+            var anno = myPlots[12].Plot.Add.Annotation("Celková zátěž");
+            anno.Label.FontSize = 14;
+            anno.Label.BackColor = ScottPlot.Color.FromHex("#131725");
+            anno.Label.ForeColor = ScottPlot.Color.FromHex("ffffff");
+            anno.Label.BorderColor = ScottPlot.Color.FromHex("#1d2335");
             ScottPlot.Control.Interaction interaction0 = new(myPlots[12])
             {
                 Inputs = customInputBindings,
@@ -506,13 +524,18 @@ namespace MaturitniProjekt
                     Width = 260.5,
                 };
 
-                myPlots[i].Plot.Axes.SetLimits(0, 60, -13, 100);
+                myPlots[i].Plot.Axes.SetLimits(0.1, 60, -12, 99.9);
                 myPlots[i].Plot.Axes.Left.IsVisible = false;
                 myPlots[i].Plot.Axes.Bottom.IsVisible = false;
                 myPlots[i].Plot.Axes.Right.IsVisible = false;
                 myPlots[i].Plot.Axes.Top.IsVisible = false;
                 myPlots[i].Plot.Grid.MajorLineColor = ScottPlot.Color.FromHex("#8A94A6");
                 myPlots[i].Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#131725");
+                var anno1 = myPlots[i].Plot.Add.Annotation($"Jádro {i+1}");
+                anno1.Label.FontSize = 10;
+                anno1.Label.BackColor = ScottPlot.Color.FromHex("#131725");
+                anno1.Label.ForeColor = ScottPlot.Color.FromHex("ffffff");
+                anno1.Label.BorderColor = ScottPlot.Color.FromHex("#1d2335");
                 ScottPlot.Control.Interaction interaction = new(myPlots[i])
                 {
                     Inputs = customInputBindings,
@@ -540,13 +563,18 @@ namespace MaturitniProjekt
                     Width = 260.5,
                 };
 
-                myPlots[i].Plot.Axes.SetLimits(0, 60, -13, 100);
+                myPlots[i].Plot.Axes.SetLimits(0.1, 60, -12, 99.9);
                 myPlots[i].Plot.Axes.Left.IsVisible = false;
                 myPlots[i].Plot.Axes.Bottom.IsVisible = false;
                 myPlots[i].Plot.Axes.Right.IsVisible = false;
                 myPlots[i].Plot.Axes.Top.IsVisible = false;
                 myPlots[i].Plot.Grid.MajorLineColor = ScottPlot.Color.FromHex("#8A94A6");
                 myPlots[i].Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#131725");
+                anno1 = myPlots[i].Plot.Add.Annotation($"Jádro {i + 1}");
+                anno1.Label.FontSize = 14;
+                anno1.Label.BackColor = ScottPlot.Color.FromHex("#131725");
+                anno1.Label.ForeColor = ScottPlot.Color.FromHex("ffffff");
+                anno1.Label.BorderColor = ScottPlot.Color.FromHex("#1d2335");
                 ScottPlot.Control.Interaction interaction1 = new(myPlots[i])
                 {
                     Inputs = customInputBindings,
