@@ -383,8 +383,10 @@ namespace MaturitniProjekt
         private async void ziskavaniZateze()
         {
             computer.Open();
+            
             while (true)
             {
+                int indexJadra = 1;
                 await Task.Delay(1000);
                 foreach (var hardwareItem in computer.Hardware)
                 {
@@ -410,13 +412,14 @@ namespace MaturitniProjekt
                                 }
                                 else if (sensor.Name.Contains("#"))
                                 {
-                                    string formatovaneJmeno = sensor.Name.Substring(sensor.Name.IndexOf("#") + 1);
-                                    if (!zatezJader.ContainsKey(formatovaneJmeno))
+                                    string indexJadraString = Convert.ToString(indexJadra);
+                                    indexJadra++;
+                                    if (!zatezJader.ContainsKey(indexJadraString))
                                     {
-                                        zatezJader[formatovaneJmeno] = new List<int>();
+                                        zatezJader[indexJadraString] = new List<int>();
                                     }
-                                    kontrolaPoctuZaznamu(formatovaneJmeno);
-                                    zatezJader[formatovaneJmeno].Add(formatovanaZatez);
+                                    kontrolaPoctuZaznamu(indexJadraString);
+                                    zatezJader[indexJadraString].Add(formatovanaZatez);
                                 }
                             }
                         }
@@ -425,11 +428,6 @@ namespace MaturitniProjekt
                 }
                 aktualizaceGrafu();
             }
-
-
-
-            //Dispatcher.InvokeAsync(ziskavaniZateze, DispatcherPriority.SystemIdle);
-
         }
 
         private void kontrolaPoctuZaznamu(string nazevIndexu)
@@ -448,7 +446,7 @@ namespace MaturitniProjekt
             {
                 dataX.Add(f);
             }
-            pridaniScatteru(12, "total");
+            pridaniScatteru(Environment.ProcessorCount, "total");
 
             for (int i = 0; i < Environment.ProcessorCount; i++)
             {
@@ -473,32 +471,32 @@ namespace MaturitniProjekt
 
             ScottPlot.Control.InputBindings customInputBindings = new() { };
 
-            myPlots[12] = new WpfPlot
+            myPlots[Environment.ProcessorCount] = new WpfPlot
             {
                 Height = 150,
                 Width = 531,
             };
 
-            myPlots[12].Plot.Axes.SetLimits(0.1, 60, -5, 99.9);
-            myPlots[12].Plot.Axes.Left.IsVisible = false;
-            myPlots[12].Plot.Axes.Bottom.IsVisible = false;
-            myPlots[12].Plot.Axes.Right.IsVisible = false;
-            myPlots[12].Plot.Axes.Top.IsVisible = false;
-            myPlots[12].Plot.Grid.MajorLineColor = ScottPlot.Color.FromHex("#8A94A6");
-            myPlots[12].Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#131725");
-            var anno = myPlots[12].Plot.Add.Annotation("Celková zátěž");
+            myPlots[Environment.ProcessorCount].Plot.Axes.SetLimits(0.1, 60, -5, 99.9);
+            myPlots[Environment.ProcessorCount].Plot.Axes.Left.IsVisible = false;
+            myPlots[Environment.ProcessorCount].Plot.Axes.Bottom.IsVisible = false;
+            myPlots[Environment.ProcessorCount].Plot.Axes.Right.IsVisible = false;
+            myPlots[Environment.ProcessorCount].Plot.Axes.Top.IsVisible = false;
+            myPlots[Environment.ProcessorCount].Plot.Grid.MajorLineColor = ScottPlot.Color.FromHex("#8A94A6");
+            myPlots[Environment.ProcessorCount].Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#131725");
+            var anno = myPlots[Environment.ProcessorCount].Plot.Add.Annotation("Celková zátěž");
             anno.Label.FontSize = 14;
             anno.Label.BackColor = ScottPlot.Color.FromHex("#131725");
             anno.Label.ForeColor = ScottPlot.Color.FromHex("ffffff");
             anno.Label.BorderColor = ScottPlot.Color.FromHex("#1d2335");
-            ScottPlot.Control.Interaction interaction0 = new(myPlots[12])
+            ScottPlot.Control.Interaction interaction0 = new(myPlots[Environment.ProcessorCount])
             {
                 Inputs = customInputBindings,
                 Actions = ScottPlot.Control.PlotActions.NonInteractive(),
             };
-            myPlots[12].Interaction = interaction0;
+            myPlots[Environment.ProcessorCount].Interaction = interaction0;
 
-            graf.Child = myPlots[12];
+            graf.Child = myPlots[Environment.ProcessorCount];
 
 
             for (int i = 0; i < Environment.ProcessorCount; i++)

@@ -312,8 +312,8 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="159*"/>
-                        <ColumnDefinition Width="281*"/>
+                        <ColumnDefinition Width="27*"/>
+                        <ColumnDefinition Width="61*"/>
                     </Grid.ColumnDefinitions>
 
                     <Label Content="Informace o procesoru"
@@ -328,48 +328,48 @@
 
                         <Label Content="Název:"
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Základní rychlost:"
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Jádra:"
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Logické procesory:"
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Mezipamět L1:"
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Mezipamět L2:"
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"/>
 
                         <Label Content="Mezipamět L3:"
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,10"/>
@@ -380,7 +380,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -388,7 +388,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -396,7 +396,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -404,7 +404,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -412,7 +412,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -420,7 +420,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,0"
@@ -428,7 +428,7 @@
 
                         <Label Content=""
                                Foreground="#8A94A6" 
-                               FontSize="17" 
+                               FontSize="14" 
                                VerticalAlignment="Top" 
                                HorizontalAlignment="Left" 
                                Margin="10,0,0,10"
