@@ -569,7 +569,7 @@ namespace MaturitniProjekt
                 myPlots[i].Plot.Grid.MajorLineColor = ScottPlot.Color.FromHex("#8A94A6");
                 myPlots[i].Plot.FigureBackground.Color = ScottPlot.Color.FromHex("#131725");
                 anno1 = myPlots[i].Plot.Add.Annotation($"Jádro {i + 1}");
-                anno1.Label.FontSize = 14;
+                anno1.Label.FontSize = 10;
                 anno1.Label.BackColor = ScottPlot.Color.FromHex("#131725");
                 anno1.Label.ForeColor = ScottPlot.Color.FromHex("ffffff");
                 anno1.Label.BorderColor = ScottPlot.Color.FromHex("#1d2335");
